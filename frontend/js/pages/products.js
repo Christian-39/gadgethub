@@ -75,24 +75,26 @@ class ProductsPage {
         try {
             const data = await API.post('/products/list/', {
                 category: this.state.category,
-                min_price: this.state.minPrice * 100, // Convert to kobo
+                min_price: this.state.minPrice * 100,
                 max_price: this.state.maxPrice * 100,
                 page_number: this.state.page,
                 sort_option: this.state.sort
             });
-            
-            const products = data.success || [];
+
+            console.log('Products API response:', data);
+
+            const products = data.products || [];
             const paginationData = data.pagination || {};
-            
+
             if (products.length === 0 && this.state.page === 1) {
                 container.innerHTML = '<div class="empty-state"><h3>No products found</h3><p>Try adjusting your filters</p></div>';
                 pagination.innerHTML = '';
                 return;
             }
-            
+
             container.className = this.state.view === 'grid' ? 'products-grid' : 'products-list';
             container.innerHTML = products.map(p => UI.renderProductCard(p, this.state.view)).join('');
-            
+
             this.state.totalPages = paginationData.TotalPages || 1;
             pagination.innerHTML = UI.renderPagination(this.state.page, this.state.totalPages, (p) => {
                 this.state.page = p;
