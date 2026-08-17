@@ -1,15 +1,15 @@
 import os
 from pathlib import Path
 from datetime import timedelta
-from dotenv import load_dotenv
+import environ
 
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.getenv('SECRET_KEY')
-DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '*').split(',')
+SECRET_KEY = config('SECRET_KEY')
+DEBUG = config('DEBUG', 'False').lower() == 'true'
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', '*').split(',')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -52,11 +52,11 @@ WSGI_APPLICATION = 'gadgethub.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.getenv('DB_NAME'),
-        'USER': os.getenv('DB_USER'),
-        'PASSWORD': os.getenv('DB_PASSWORD'),
-        'HOST': os.getenv('DB_HOST'),
-        'PORT': os.getenv('DB_PORT', '3306'),
+        'NAME': config('DB_NAME'),
+        'USER': config('DB_USER'),
+        'PASSWORD': config('DB_PASSWORD'),
+        'HOST': config('DB_HOST'),
+        'PORT': config('DB_PORT', '3306'),
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
             'charset': 'utf8mb4',
@@ -68,7 +68,7 @@ DATABASES = {
 CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': os.getenv('REDIS_URL'),
+        'LOCATION': config('REDIS_URL'),
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
         }
@@ -127,26 +127,26 @@ SIMPLE_JWT = {
 }
 
 # CORS
-CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS', '').split(',')
-CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', '').split(',')
+CORS_ALLOWED_ORIGINS = config('CORS_ALLOWED_ORIGINS', '').split(',')
+CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', '').split(',')
 
 # Backblaze B2 (S3-compatible)
-USE_S3 = os.getenv('USE_S3', 'False').lower() == 'true'
+USE_S3 = config('USE_S3', 'False').lower() == 'true'
 if USE_S3:
     DEFAULT_FILE_STORAGE = 'utils.storage.BackblazeB2Storage'
-    AWS_ACCESS_KEY_ID = os.getenv('B2_KEY_ID')
-    AWS_SECRET_ACCESS_KEY = os.getenv('B2_APPLICATION_KEY')
-    AWS_STORAGE_BUCKET_NAME = os.getenv('B2_BUCKET_NAME')
-    AWS_S3_ENDPOINT_URL = os.getenv('B2_ENDPOINT')
-    AWS_S3_REGION_NAME = os.getenv('B2_REGION')
+    AWS_ACCESS_KEY_ID = config('B2_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = config('B2_APPLICATION_KEY')
+    AWS_STORAGE_BUCKET_NAME = config('B2_BUCKET_NAME')
+    AWS_S3_ENDPOINT_URL = config('B2_ENDPOINT')
+    AWS_S3_REGION_NAME = config('B2_REGION')
     AWS_S3_SIGNATURE_VERSION = 's3v4'
 
 # Payuee
-PAYUEE_API_KEY = os.getenv('PAYUEE_API_KEY')
-PAYUEE_API_SECRET = os.getenv('PAYUEE_API_SECRET')
-PAYUEE_BASE_URL = os.getenv('PAYUEE_BASE_URL', 'https://escrow.payuee.com/v1')
-PAYUEE_WEBHOOK_SECRET = os.getenv('WEBHOOK_SECRET')
-PAYUEE_WEBHOOK_URL = os.getenv('PAYUEE_WEBHOOK_URL')
+PAYUEE_API_KEY = config('PAYUEE_API_KEY')
+PAYUEE_API_SECRET = config('PAYUEE_API_SECRET')
+PAYUEE_BASE_URL = config('PAYUEE_BASE_URL', 'https://escrow.payuee.com/v1')
+PAYUEE_WEBHOOK_SECRET = config('WEBHOOK_SECRET')
+PAYUEE_WEBHOOK_URL = config('PAYUEE_WEBHOOK_URL')
 
 # Security
 SECURE_SSL_REDIRECT = not DEBUG
