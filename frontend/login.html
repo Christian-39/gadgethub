@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login — GadgetHub</title>
-    <link rel="stylesheet" href="/css/main.css">
-    <link rel="stylesheet" href="/css/dark-mode.css">
+    <link rel="stylesheet" href="/frontend/css/main.css">
+    <link rel="stylesheet" href="/frontend/css/dark-mode.css">
 </head>
 <body class="auth-page">
     <div class="auth-container">
-        <a href="/" class="auth-logo">⚡ GadgetHub</a>
+        <a href="/frontend/" class="auth-logo">⚡ GadgetHub</a>
         <h2>Welcome Back</h2>
         <p>Sign in to continue shopping</p>
         
@@ -26,16 +26,16 @@
         </form>
         
         <div class="auth-links">
-            <a href="/forgot-password.html">Forgot password?</a>
+            <a href="/frontend/forgot-password.html">Forgot password?</a>
             <span>•</span>
-            <a href="/register.html">Create account</a>
+            <a href="/frontend/register.html">Create account</a>
         </div>
     </div>
 
     <script type="module">
-        import { API } from '/js/core/api.js';
-        import { Auth } from '/js/core/auth.js';
-        import { UI } from '/js/core/ui.js';
+        import { API } from '/frontend/js/core/api.js';
+        import { Auth } from '/frontend/js/core/auth.js';
+        import { UI } from '/frontend/js/core/ui.js';
         
         document.getElementById('login-form').addEventListener('submit', async (e) => {
             e.preventDefault();

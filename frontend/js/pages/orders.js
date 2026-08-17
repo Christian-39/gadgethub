@@ -26,7 +26,7 @@ class OrdersPage {
                     <div class="empty-state">
                         <h3>No orders yet</h3>
                         <p>Your order history will appear here</p>
-                        <a href="/products.html" class="btn-primary">Start Shopping</a>
+                        <a href="/frontend/products.html" class="btn-primary">Start Shopping</a>
                     </div>
                 `;
                 return;
@@ -123,7 +123,7 @@ class OrdersPage {
                 </div>
                 
                 <div class="order-actions">
-                    <a href="/orders/detail/${orderId}/receipt/" target="_blank" class="btn-outline">📄 Receipt</a>
+                    <a href="/frontend/orders/detail/${orderId}/receipt/" target="_blank" class="btn-outline">📄 Receipt</a>
                     ${order.status === 'pending' || order.status === 'hold' ? `
                         <button id="cancel-order" class="btn-danger">Cancel Order</button>
                     ` : ''}

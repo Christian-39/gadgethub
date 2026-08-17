@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard — GadgetHub</title>
-    <link rel="stylesheet" href="/css/main.css">
-    <link rel="stylesheet" href="/css/dark-mode.css">
-    <link rel="stylesheet" href="/css/admin.css">
+    <link rel="stylesheet" href="/frontend/css/main.css">
+    <link rel="stylesheet" href="/frontend/css/dark-mode.css">
+    <link rel="stylesheet" href="/frontend/css/admin.css">
 </head>
 <body class="admin-page">
     <aside class="admin-sidebar">
@@ -132,8 +132,8 @@
     </main>
 
     <script type="module">
-        import { App } from '/js/core/app.js';
-        import { AdminDashboard } from '/js/pages/admin.js';
+        import { App } from '/frontend/js/core/app.js';
+        import { AdminDashboard } from '/frontend/js/pages/admin.js';
         App.init().then(() => AdminDashboard.init());
     </script>
 </body>

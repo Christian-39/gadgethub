@@ -46,7 +46,7 @@ class HomePage {
         ];
         
         container.innerHTML = categories.map(c => `
-            <a href="/products.html?category=${c.id}" class="category-card">
+            <a href="/frontend/products.html?category=${c.id}" class="category-card">
                 <span class="cat-icon">${c.icon}</span>
                 <span class="cat-name">${c.name}</span>
             </a>

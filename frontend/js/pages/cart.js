@@ -19,7 +19,7 @@ class CartPage {
                     <div class="empty-state">
                         <h2>Your cart is empty</h2>
                         <p>Browse our products and add items to your cart</p>
-                        <a href="/products.html" class="btn-primary">Start Shopping</a>
+                        <a href="/frontend/products.html" class="btn-primary">Start Shopping</a>
                     </div>
                 `;
                 if (summary) summary.style.display = 'none';
@@ -60,7 +60,7 @@ class CartPage {
                     <div class="summary-row"><span>Subtotal</span><span>${formatNaira(subtotal)}</span></div>
                     <div class="summary-row"><span>Shipping</span><span>Calculated at checkout</span></div>
                     <div class="summary-row total"><span>Total</span><span>${formatNaira(total)}</span></div>
-                    <a href="/checkout.html" class="btn-primary btn-large btn-full">Proceed to Checkout</a>
+                    <a href="/frontend/checkout.html" class="btn-primary btn-large btn-full">Proceed to Checkout</a>
                 `;
             }
             
