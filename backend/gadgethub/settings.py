@@ -1,15 +1,22 @@
-import os
 from pathlib import Path
 from datetime import timedelta
 import environ
 
-load_dotenv()
-
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = config('SECRET_KEY')
-DEBUG = config('DEBUG', 'False').lower() == 'true'
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', '*').split(',')
+config = environ.Env(
+    DEBUG=(bool, False),
+)
+
+environ.Env.read_env(BASE_DIR / ".env")
+
+SECRET_KEY = config("SECRET_KEY")
+DEBUG = config("DEBUG")
+
+ALLOWED_HOSTS = config(
+    "ALLOWED_HOSTS",
+    default="localhost,127.0.0.1",
+).split(",")
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -131,7 +138,7 @@ CORS_ALLOWED_ORIGINS = config('CORS_ALLOWED_ORIGINS', '').split(',')
 CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', '').split(',')
 
 # Backblaze B2 (S3-compatible)
-USE_S3 = config('USE_S3', 'False').lower() == 'true'
+USE_S3 = config("USE_S3", default=False, cast=bool)
 if USE_S3:
     DEFAULT_FILE_STORAGE = 'utils.storage.BackblazeB2Storage'
     AWS_ACCESS_KEY_ID = config('B2_KEY_ID')
