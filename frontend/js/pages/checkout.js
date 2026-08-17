@@ -24,7 +24,7 @@ class CheckoutPage {
             const addresses = await API.get('/auth/addresses/');
             
             if (!addresses.length) {
-                container.innerHTML = '<p>No saved addresses. <a href="/frontend/profile.html#addresses">Add one</a></p>';
+                container.innerHTML = '<p>No saved addresses. <a href="/profile.html#addresses">Add one</a></p>';
                 return;
             }
             

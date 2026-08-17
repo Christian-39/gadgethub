@@ -25,3 +25,5 @@ pip install -r requirements.txt
 # Create .env file with required variables
 python manage.py migrate
 python manage.py runserver
+
+gadgethub@gmail.com

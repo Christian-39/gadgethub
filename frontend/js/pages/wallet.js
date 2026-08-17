@@ -80,7 +80,7 @@ class WalletPage {
                     <div class="tx-amount ${t.type}">
                         ${t.type === 'credit' || t.type === 'refund' ? '+' : '-'} ${t.formatted_amount}
                     </div>
-                    <a href="/frontend/wallet/receipt/${t.id}/" class="btn-icon" title="Receipt">📄</a>
+                    <a href="/wallet/receipt/${t.id}/" class="btn-icon" title="Receipt">📄</a>
                 </div>
             `).join('');
         } catch (e) {

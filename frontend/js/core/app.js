@@ -22,7 +22,7 @@ class App {
         
         if (user) {
             const html = `
-                <a href="/frontend/profile.html" class="nav-user">
+                <a href="/profile.html" class="nav-user">
                     <img src="${user.profile_picture || '/assets/avatar.svg'}" alt="Profile">
                     <span>${user.first_name}</span>
                 </a>
@@ -33,7 +33,7 @@ class App {
             
             document.getElementById('logout-btn')?.addEventListener('click', () => Auth.logout());
         } else {
-            const html = `<a href="/frontend/login.html" class="btn-primary">Login</a>`;
+            const html = `<a href="/login.html" class="btn-primary">Login</a>`;
             if (authLinks) authLinks.innerHTML = html;
             if (mobileAuth) mobileAuth.innerHTML = html;
         }

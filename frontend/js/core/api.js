@@ -1,4 +1,4 @@
-const API_BASE = 'https://gadgethub-api.onrender.com/api';
+const API_BASE = 'http://127.0.0.1:8000/api';
 
 class API {
     static async request(endpoint, options = {}) {
