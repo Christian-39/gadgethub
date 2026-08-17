@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="system">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Care — GadgetHub</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/dark-mode.css">
+</head>
+<body>
+    <div id="overlay" class="overlay"></div>
+    <aside class="sidebar" id="sidebar">[Same sidebar]</aside>
+    <header class="main-header">
+        <button class="menu-toggle" id="menu-toggle">☰</button>
+        <a href="/" class="mobile-logo">⚡ GadgetHub</a>
+    </header>
+
+    <main class="main-content">
+        <h1>Customer Care</h1>
+        
+        <div class="care-grid">
+            <div class="care-card">
+                <h3>📞 Contact Us</h3>
+                <p>Email: support@gadgethub.ng</p>
+                <p>Phone: +234 800 123 4567</p>
+                <p>Hours: Mon-Fri 9am - 6pm WAT</p>
+            </div>
+            
+            <div class="care-card">
+                <h3>🎫 Submit a Ticket</h3>
+                <form id="ticket-form">
+                    <div class="form-group">
+                        <label>Subject</label>
+                        <input type="text" id="ticket-subject" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select id="ticket-category">
+                            <option>Order Issue</option>
+                            <option>Payment Problem</option>
+                            <option>Delivery Question</option>
+                            <option>Account Help</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Message</label>
+                        <textarea id="ticket-message" rows="4" required></textarea>
+                    </div>
+                    <button type="submit" class="btn-primary">Submit Ticket</button>
+                </form>
+            </div>
+            
+            <div class="care-card">
+                <h3>❓ FAQs</h3>
+                <div class="faq-list">
+                    <details>
+                        <summary>How does escrow work?</summary>
+                        <p>Funds are held securely by Payuee until you confirm delivery via QR scan and PIN.</p>
+                    </details>
+                    <details>
+                        <summary>What is the delivery timeline?</summary>
+                        <p>Delivery times vary by vendor and location, typically 3-10 business days.</p>
+                    </details>
+                    <details>
+                        <summary>Can I cancel my order?</summary>
+                        <p>Orders can be cancelled within the first 30% of the estimated delivery timeline.</p>
+                    </details>
+                    <details>
+                        <summary>How do I fund my wallet?</summary>
+                        <p>Transfer to your dedicated virtual account shown in the Wallet page.</p>
+                    </details>
+                </div>
+            </div>
+            
+            <div class="care-card">
+                <h3>📋 Policies</h3>
+                <a href="/returns.html">Returns & Refunds</a>
+                <a href="/privacy.html">Privacy Policy</a>
+                <a href="/terms.html">Terms & Conditions</a>
+            </div>
+        </div>
+    </main>
+
+    <nav class="mobile-nav">[Same as index]</nav>
+    
+    <script type="module">
+        import { App } from '/js/core/app.js';
+        import { API } from '/js/core/api.js';
+        import { UI } from '/js/core/ui.js';
+        App.init();
+        
+        document.getElementById('ticket-form')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            try {
+                await API.post('/support/tickets/', {
+                    subject: document.getElementById('ticket-subject').value,
+                    category: document.getElementById('ticket-category').value,
+                    message: document.getElementById('ticket-message').value
+                });
+                UI.showToast('Ticket submitted successfully', 'success');
+                e.target.reset();
+            } catch (err) {
+                UI.showToast(err.message, 'error');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="system">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products — GadgetHub</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/dark-mode.css">
+</head>
+<body>
+    <div id="overlay" class="overlay"></div>
+    <aside class="sidebar" id="sidebar">[Same sidebar as index]</aside>
+    
+    <header class="main-header">
+        <button class="menu-toggle" id="menu-toggle">☰</button>
+        <a href="/" class="mobile-logo">⚡ GadgetHub</a>
+        <div class="header-actions" id="auth-links"></div>
+    </header>
+
+    <main class="main-content">
+        <div class="products-page">
+            <aside class="filters-panel">
+                <h3>Filters</h3>
+                <div class="filter-group">
+                    <label>Category</label>
+                    <select id="category-filter">
+                        <option value="all">All Categories</option>
+                        <option value="gadgets">Gadgets</option>
+                        <option value="outfits">Fashion</option>
+                        <option value="jewelry">Jewelry</option>
+                        <option value="cars-car-parts">Auto</option>
+                        <option value="tools">Tools</option>
+                        <option value="kids-accessories">Kids</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Price Range</label>
+                    <div class="price-inputs">
+                        <input type="number" id="min-price" placeholder="Min ₦" min="0">
+                        <input type="number" id="max-price" placeholder="Max ₦" min="0">
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <label>Sort By</label>
+                    <select id="sort-filter">
+                        <option value="1">Featured</option>
+                        <option value="2">Best Selling</option>
+                        <option value="3">Name A-Z</option>
+                        <option value="5">Price Low-High</option>
+                        <option value="6">Price High-Low</option>
+                        <option value="8">Newest</option>
+                    </select>
+                </div>
+            </aside>
+
+            <div class="products-content">
+                <div class="products-toolbar">
+                    <h1>Products</h1>
+                    <div class="view-toggle">
+                        <button id="grid-view" class="active">⊞ Grid</button>
+                        <button id="list-view">☰ List</button>
+                    </div>
+                </div>
+                <div id="products-grid" class="products-grid">
+                    <!-- JS populated -->
+                </div>
+                <div id="pagination" class="pagination-container">
+                    <!-- JS populated -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <nav class="mobile-nav">[Same as index]</nav>
+    
+    <script type="module">
+        import { App } from '/js/core/app.js';
+        import { ProductsPage } from '/js/pages/products.js';
+        App.init().then(() => ProductsPage.init());
+    </script>
+</body>
+</html>

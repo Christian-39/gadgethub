@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="system">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orders — GadgetHub</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/dark-mode.css">
+</head>
+<body>
+    <div id="overlay" class="overlay"></div>
+    <aside class="sidebar" id="sidebar">[Same sidebar]</aside>
+    <header class="main-header">
+        <button class="menu-toggle" id="menu-toggle">☰</button>
+        <a href="/" class="mobile-logo">⚡ GadgetHub</a>
+    </header>
+
+    <main class="main-content">
+        <h1>My Orders</h1>
+        <div class="orders-filter">
+            <select id="order-status-filter">
+                <option value="">All Status</option>
+                <option value="pending">Pending</option>
+                <option value="hold">On Hold</option>
+                <option value="confirmed">Confirmed</option>
+                <option value="delivered">Delivered</option>
+                <option value="cancelled">Cancelled</option>
+                <option value="refunded">Refunded</option>
+            </select>
+        </div>
+                <div id="orders-list" class="orders-list">
+            <!-- JS populated -->
+        </div>
+        <div id="order-detail" class="order-detail hidden">
+            <!-- JS populated -->
+        </div>
+    </main>
+
+    <nav class="mobile-nav">[Same as index]</nav>
+    
+    <script type="module">
+        import { App } from '/js/core/app.js';
+        import { OrdersPage } from '/js/pages/orders.js';
+        App.init().then(() => OrdersPage.init());
+    </script>
+</body>
+</html>

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="system">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile — GadgetHub</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/dark-mode.css">
+</head>
+<body>
+    <div id="overlay" class="overlay"></div>
+    <aside class="sidebar" id="sidebar">[Same sidebar]</aside>
+    <header class="main-header">
+        <button class="menu-toggle" id="menu-toggle">☰</button>
+        <a href="/" class="mobile-logo">⚡ GadgetHub</a>
+    </header>
+
+    <main class="main-content">
+        <h1>My Profile</h1>
+        
+        <div class="profile-header">
+            <div class="profile-avatar-section">
+                <div class="avatar-wrapper">
+                    <img id="profile-pic" src="/assets/avatar.svg" alt="Profile">
+                    <label for="upload-pic" class="upload-overlay">📷</label>
+                    <input type="file" id="upload-pic" accept="image/*" hidden>
+                </div>
+                <div class="profile-info">
+                    <h2 id="profile-name">Loading...</h2>
+                    <p id="profile-email">...</p>
+                    <p id="profile-phone">...</p>
+                </div>
+            </div>
+            
+            <div class="profile-stats">
+                <div class="stat-card" id="stat-wishlist">
+                    <div class="stat-icon">❤️</div>
+                    <div class="stat-value">0</div>
+                    <div class="stat-label">Wishlist</div>
+                </div>
+                <div class="stat-card" id="stat-cart">
+                    <div class="stat-icon">🛒</div>
+                    <div class="stat-value">0</div>
+                    <div class="stat-label">Cart</div>
+                </div>
+                <div class="stat-card" id="stat-orders">
+                    <div class="stat-icon">📦</div>
+                    <div class="stat-value">0</div>
+                    <div class="stat-label">Orders</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-tabs">
+            <button class="tab-btn active" data-tab="edit">Edit Profile</button>
+            <button class="tab-btn" data-tab="addresses">Addresses</button>
+            <button class="tab-btn" data-tab="security">Security</button>
+            <button class="tab-btn" data-tab="pin">Transaction PIN</button>
+        </div>
+
+        <div class="tab-content active" id="tab-edit">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>First Name</label>
+                    <input type="text" id="edit-first-name">
+                </div>
+                <div class="form-group">
+                    <label>Last Name</label>
+                    <input type="text" id="edit-last-name">
+                </div>
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="tel" id="edit-phone">
+                </div>
+                <div class="form-group full">
+                    <label>Address</label>
+                    <textarea id="edit-address" rows="2"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>City</label>
+                    <input type="text" id="edit-city">
+                </div>
+                <div class="form-group">
+                    <label>State</label>
+                    <input type="text" id="edit-state">
+                </div>
+            </div>
+            <button id="save-profile" class="btn-primary">Save Changes</button>
+        </div>
+
+        <div class="tab-content" id="tab-addresses">
+            <div id="address-list" class="address-list">
+                <!-- JS populated -->
+            </div>
+            <div class="add-address-form">
+                <h4>Add New Address</h4>
+                <form id="address-form" class="form-grid">
+                    <div class="form-group">
+                        <label>Label</label>
+                        <select id="addr-label">
+                            <option value="Home">Home</option>
+                            <option value="Work">Work</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="addr-fullname">
+                    </div>
+                    <div class="form-group">
+                        <label>Phone</label>
+                        <input type="tel" id="addr-phone">
+                    </div>
+                    <div class="form-group full">
+                        <label>Address Line 1</label>
+                        <input type="text" id="addr-line1">
+                    </div>
+                    <div class="form-group full">
+                        <label>Address Line 2</label>
+                        <input type="text" id="addr-line2">
+                    </div>
+                    <div class="form-group">
+                        <label>City</label>
+                        <input type="text" id="addr-city">
+                    </div>
+                    <div class="form-group">
+                        <label>State</label>
+                        <input type="text" id="addr-state">
+                    </div>
+                    <div class="form-group">
+                        <label class="checkbox">
+                            <input type="checkbox" id="addr-default"> Set as default
+                        </label>
+                    </div>
+                </form>
+                <button id="add-address" class="btn-primary">Add Address</button>
+            </div>
+        </div>
+
+        <div class="tab-content" id="tab-security">
+            <div class="security-section">
+                <h4>Change Password</h4>
+                <div class="form-group">
+                    <label>Current Password</label>
+                    <input type="password" id="old-password">
+                </div>
+                <div class="form-group">
+                    <label>New Password</label>
+                    <input type="password" id="new-password">
+                </div>
+                <div class="form-group">
+                    <label>Confirm New Password</label>
+                    <input type="password" id="confirm-password">
+                </div>
+                <button id="change-password" class="btn-primary">Update Password</button>
+            </div>
+        </div>
+
+        <div class="tab-content" id="tab-pin">
+            <div class="pin-section">
+                <p>Status: <span id="pin-status">Checking...</span></p>
+                <div class="form-group">
+                    <label>Create/Update 6-Digit PIN</label>
+                    <input type="password" id="new-pin" maxlength="6" placeholder="******">
+                </div>
+                <div class="form-group">
+                    <label>Confirm PIN</label>
+                    <input type="password" id="confirm-pin" maxlength="6" placeholder="******">
+                </div>
+                <button id="create-pin" class="btn-primary">Save PIN</button>
+                <p class="note">This PIN is required for placing orders and verifying deliveries</p>
+            </div>
+        </div>
+    </main>
+
+    <nav class="mobile-nav">[Same as index]</nav>
+    
+    <script type="module">
+        import { App } from '/js/core/app.js';
+        import { ProfilePage } from '/js/pages/profile.js';
+        App.init().then(() => ProfilePage.init());
+        
+        // Tab switching
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                btn.classList.add('active');
+                document.getElementById(`tab-${btn.dataset.tab}`).classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

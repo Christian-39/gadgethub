@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="system">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard — GadgetHub</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/dark-mode.css">
+    <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body class="admin-page">
+    <aside class="admin-sidebar">
+        <div class="admin-logo">⚡ GadgetHub Admin</div>
+        <nav>
+            <a href="#dashboard" class="active">📊 Dashboard</a>
+            <a href="#orders">📦 Orders</a>
+            <a href="#products">🛍️ Products</a>
+            <a href="#customers">👥 Customers</a>
+            <a href="#transactions">💰 Transactions</a>
+            <a href="#support">🎫 Support</a>
+            <a href="#webhooks">🔔 Webhooks</a>
+            <a href="#settings">⚙️ Settings</a>
+        </nav>
+    </aside>
+
+    <main class="admin-main">
+        <header class="admin-header">
+            <h1>Dashboard Overview</h1>
+            <div class="admin-actions">
+                <span id="admin-user">Admin</span>
+                <button onclick="Auth.logout()">Logout</button>
+            </div>
+        </header>
+
+        <div class="stats-grid">
+            <div class="stat-box">
+                <div class="stat-icon">💰</div>
+                <div class="stat-info">
+                    <span class="stat-label">Revenue</span>
+                    <span id="stat-revenue" class="stat-value">₦0.00</span>
+                </div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-icon">🛒</div>
+                <div class="stat-info">
+                    <span class="stat-label">Sales</span>
+                    <span id="stat-sales" class="stat-value">0</span>
+                </div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-icon">📦</div>
+                <div class="stat-info">
+                    <span class="stat-label">Orders</span>
+                    <span id="stat-orders" class="stat-value">0</span>
+                </div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-icon">👥</div>
+                <div class="stat-info">
+                    <span class="stat-label">Customers</span>
+                    <span id="stat-customers" class="stat-value">0</span>
+                </div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-icon">🛍️</div>
+                <div class="stat-info">
+                    <span class="stat-label">Products</span>
+                    <span id="stat-products" class="stat-value">0</span>
+                </div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-icon">⭐</div>
+                <div class="stat-info">
+                    <span class="stat-label">Reviews</span>
+                    <span id="stat-reviews" class="stat-value">0</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="charts-grid">
+            <div class="chart-card">
+                <h3>Daily Sales</h3>
+                <canvas id="daily-sales-chart" width="400" height="200"></canvas>
+            </div>
+            <div class="chart-card">
+                <h3>Monthly Revenue</h3>
+                <canvas id="monthly-revenue-chart" width="400" height="200"></canvas>
+            </div>
+            <div class="chart-card">
+                <h3>Order Status</h3>
+                <canvas id="order-status-chart" width="150" height="150"></canvas>
+            </div>
+        </div>
+
+        <div class="tables-section">
+            <div class="table-card">
+                <h3>Recent Orders</h3>
+                <table class="data-table">
+                    <thead>
+                        <tr><th>ID</th><th>Customer</th><th>Total</th><th>Status</th><th>Date</th></tr>
+                    </thead>
+                    <tbody id="recent-orders">
+                        <!-- JS populated -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="table-card">
+                <h3>Support Tickets</h3>
+                <table class="data-table">
+                    <thead>
+                        <tr><th>ID</th><th>Subject</th><th>User</th><th>Status</th><th>Date</th></tr>
+                    </thead>
+                    <tbody id="support-tickets">
+                        <!-- JS populated -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="table-card">
+                <h3>Webhook Logs</h3>
+                <table class="data-table">
+                    <thead>
+                        <tr><th>Event</th><th>Order</th><th>Status</th><th>Date</th></tr>
+                    </thead>
+                    <tbody id="webhook-logs">
+                        <!-- JS populated -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+        import { App } from '/js/core/app.js';
+        import { AdminDashboard } from '/js/pages/admin.js';
+        App.init().then(() => AdminDashboard.init());
+    </script>
+</body>
+</html>

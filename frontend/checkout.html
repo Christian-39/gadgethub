@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="system">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout — GadgetHub</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/dark-mode.css">
+</head>
+<body>
+    <div id="overlay" class="overlay"></div>
+    <aside class="sidebar" id="sidebar">[Same sidebar]</aside>
+    <header class="main-header">
+        <button class="menu-toggle" id="menu-toggle">☰</button>
+        <a href="/" class="mobile-logo">⚡ GadgetHub</a>
+    </header>
+
+    <main class="main-content">
+        <h1>Checkout</h1>
+        <div class="checkout-layout">
+            <div class="checkout-main">
+                <section class="checkout-section">
+                    <h3>📍 Delivery Address</h3>
+                    <div id="address-list" class="address-list">
+                        <!-- JS populated -->
+                    </div>
+                </section>
+                
+                <section class="checkout-section">
+                    <h3>🔒 Transaction PIN</h3>
+                    <p>Enter your 6-digit PIN to authorize this order</p>
+                    <input type="password" id="trans-code" maxlength="6" placeholder="******" class="pin-input">
+                </section>
+            </div>
+            
+            <aside class="checkout-summary">
+                <h3>Order Summary</h3>
+                <div id="checkout-items" class="checkout-items">
+                    <!-- JS populated -->
+                </div>
+                <div class="summary-totals">
+                    <div class="summary-row"><span>Subtotal</span><span id="checkout-subtotal">₦0.00</span></div>
+                    <div class="summary-row"><span>Shipping</span><span id="checkout-shipping">Calculating...</span></div>
+                    <div id="shipping-breakdown" class="shipping-breakdown"></div>
+                    <div class="summary-row total"><span>Total</span><span id="checkout-total">₦0.00</span></div>
+                </div>
+                <button id="place-order" class="btn-primary btn-large btn-full">Place Order</button>
+            </aside>
+        </div>
+    </main>
+
+    <nav class="mobile-nav">[Same as index]</nav>
+    
+    <script type="module">
+        import { App } from '/js/core/app.js';
+        import { CheckoutPage } from '/js/pages/checkout.js';
+        App.init().then(() => CheckoutPage.init());
+    </script>
+</body>
+</html>

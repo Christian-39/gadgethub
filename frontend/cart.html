@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="system">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart — GadgetHub</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/dark-mode.css">
+</head>
+<body>
+    <div id="overlay" class="overlay"></div>
+    <aside class="sidebar" id="sidebar">[Same sidebar]</aside>
+    <header class="main-header">
+        <button class="menu-toggle" id="menu-toggle">☰</button>
+        <a href="/" class="mobile-logo">⚡ GadgetHub</a>
+    </header>
+
+    <main class="main-content">
+        <h1>Shopping Cart</h1>
+        <div class="cart-layout">
+            <div id="cart-items" class="cart-items">
+                <!-- JS populated -->
+            </div>
+            <aside id="cart-summary" class="cart-summary">
+                <!-- JS populated -->
+            </aside>
+        </div>
+    </main>
+
+    <nav class="mobile-nav">[Same as index]</nav>
+    
+    <script type="module">
+        import { App } from '/js/core/app.js';
+        import { CartPage } from '/js/pages/cart.js';
+        App.init().then(() => CartPage.init());
+    </script>
+</body>
+</html>

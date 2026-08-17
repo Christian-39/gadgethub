@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="system">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wallet — GadgetHub</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/dark-mode.css">
+</head>
+<body>
+    <div id="overlay" class="overlay"></div>
+    <aside class="sidebar" id="sidebar">[Same sidebar]</aside>
+    <header class="main-header">
+        <button class="menu-toggle" id="menu-toggle">☰</button>
+        <a href="/" class="mobile-logo">⚡ GadgetHub</a>
+    </header>
+
+    <main class="main-content">
+        <h1>My Wallet</h1>
+        
+        <div class="wallet-header">
+            <div class="balance-card">
+                <p class="balance-label">Available Balance</p>
+                <h2 id="wallet-balance" class="balance-amount">₦0.00</h2>
+                <p class="balance-note">Funds are held in escrow until delivery is confirmed</p>
+            </div>
+            <div id="funding-details" class="funding-details">
+                <!-- JS populated -->
+            </div>
+        </div>
+
+        <div class="transactions-section">
+            <div class="transactions-header">
+                <h3>Transaction History</h3>
+                <div class="transaction-filters">
+                    <select id="tx-type">
+                        <option value="">All Types</option>
+                        <option value="credit">Credits</option>
+                        <option value="debit">Debits</option>
+                        <option value="escrow_lock">Escrow</option>
+                        <option value="refund">Refunds</option>
+                    </select>
+                    <input type="text" id="tx-search" placeholder="Search transactions...">
+                    <input type="date" id="tx-start">
+                    <input type="date" id="tx-end">
+                </div>
+            </div>
+            <div id="transactions-list" class="transactions-list">
+                <!-- JS populated -->
+            </div>
+        </div>
+    </main>
+
+    <nav class="mobile-nav">[Same as index]</nav>
+    
+    <script type="module">
+        import { App } from '/js/core/app.js';
+        import { WalletPage } from '/js/pages/wallet.js';
+        App.init().then(() => WalletPage.init());
+    </script>
+</body>
+</html>

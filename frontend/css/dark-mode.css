@@ -1,0 +1,41 @@
+[data-theme="dark"] {
+    --bg: #0F172A;
+    --surface: #1E293B;
+    --text: #F1F5F9;
+    --text-secondary: #94A3B8;
+    --border: #334155;
+    --shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+[data-theme="dark"] .product-image,
+[data-theme="dark"] .skeleton-img {
+    background: #334155;
+}
+
+[data-theme="dark"] .skeleton-text {
+    background: linear-gradient(90deg, #334155 25%, #475569 50%, #334155 75%);
+    background-size: 200% 100%;
+}
+
+[data-theme="dark"] input,
+[data-theme="dark"] select,
+[data-theme="dark"] textarea {
+    background: #0F172A;
+    color: var(--text);
+    border-color: #334155;
+}
+
+[data-theme="dark"] .hero {
+    background: linear-gradient(135deg, #3730A3 0%, #6D28D9 100%);
+}
+
+[data-theme="dark"] .balance-card {
+    background: linear-gradient(135deg, #3730A3 0%, #6D28D9 100%);
+}
+
+[data-theme="dark"] .status-pending { background: #1E3A5F; color: #93C5FD; }
+[data-theme="dark"] .status-hold { background: #451A03; color: #FCD34D; }
+[data-theme="dark"] .status-confirmed { background: #064E3B; color: #6EE7B7; }
+[data-theme="dark"] .status-delivered { background: #064E3B; color: #6EE7B7; }
+[data-theme="dark"] .status-cancelled { background: #450A0A; color: #FCA5A5; }
+[data-theme="dark"] .status-refunded { background: #3B0764; color: #D8B4FE; }
