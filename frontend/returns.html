@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="system">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Returns & Refunds — GadgetHub</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/dark-mode.css">
+</head>
+<body>
+    <div id="overlay" class="overlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="/" class="logo">⚡ GadgetHub</a>
+            <button class="close-sidebar" id="close-sidebar">✕</button>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="/">🏠 Home</a>
+            <a href="/products.html">🛍️ Products</a>
+            <a href="/cart.html">🛒 Cart</a>
+            <a href="/customer-care.html" class="active">🎧 Support</a>
+        </nav>
+        <div class="sidebar-footer">
+            <button data-theme-toggle class="theme-toggle">🌓 Theme</button>
+        </div>
+    </aside>
+
+    <header class="main-header">
+        <button class="menu-toggle" id="menu-toggle">☰</button>
+        <a href="/" class="mobile-logo">⚡ GadgetHub</a>
+    </header>
+
+    <main class="main-content">
+        <h1>Returns & Refunds</h1>
+        <div class="care-card" style="max-width: 800px;">
+            <h3>Return Policy</h3>
+            <p>Due to the escrow nature of our marketplace, returns are handled differently than traditional e-commerce. Funds remain locked until you confirm delivery, giving you full control.</p>
+            
+            <h3>Refund Eligibility</h3>
+            <ul style="margin: 16px 0; padding-left: 24px; color: var(--text-secondary);">
+                <li>Item not delivered within estimated timeline</li>
+                <li>Item significantly different from description</li>
+                <li>Damaged or defective products</li>
+                <li>Wrong item delivered</li>
+                <li>Order cancelled within the 30% delivery window</li>
+            </ul>
+            
+            <h3>How Refunds Work</h3>
+            <p>When you report an issue or cancel an eligible order, Payuee investigates and processes the refund directly to your wallet. You do not need to return physical items for escrow-protected orders — the funds were never released to the vendor.</p>
+            
+            <h3>Timeline</h3>
+            <p>Refunds are typically processed within 24-48 hours of approval. Wallet credits are instant once approved.</p>
+            
+            <h3>Non-Refundable Items</h3>
+            <p>Orders where delivery has been confirmed via QR scan and transaction PIN cannot be refunded unless fraud is proven. Always inspect your delivery before confirming.</p>
+        </div>
+    </main>
+
+    <nav class="mobile-nav">
+        <a href="/">🏠<span>Home</span></a>
+        <a href="/categories.html">📂<span>Categories</span></a>
+        <a href="/cart.html">🛒<span>Cart</span></a>
+        <a href="/wishlist.html">❤️<span>Wishlist</span></a>
+        <a href="/profile.html">👤<span>Profile</span></a>
+    </nav>
+
+    <script type="module">
+        import { App } from '/js/core/app.js';
+        App.init();
+    </script>
+</body>
+</html>

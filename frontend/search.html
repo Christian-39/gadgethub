@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="system">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search — GadgetHub</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/dark-mode.css">
+</head>
+<body>
+    <div id="overlay" class="overlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="/" class="logo">⚡ GadgetHub</a>
+            <button class="close-sidebar" id="close-sidebar">✕</button>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="/">🏠 Home</a>
+            <a href="/products.html">🛍️ Products</a>
+            <a href="/categories.html">📂 Categories</a>
+            <a href="/cart.html">🛒 Cart <span class="badge" data-cart-count>0</span></a>
+            <a href="/wishlist.html">❤️ Wishlist <span class="badge" data-wish-count>0</span></a>
+            <a href="/orders.html">📦 Orders</a>
+            <a href="/wallet.html">💰 Wallet</a>
+            <a href="/profile.html">👤 Profile</a>
+            <a href="/customer-care.html">🎧 Support</a>
+        </nav>
+        <div class="sidebar-footer">
+            <button data-theme-toggle class="theme-toggle">🌓 Theme</button>
+        </div>
+    </aside>
+
+    <header class="main-header">
+        <button class="menu-toggle" id="menu-toggle">☰</button>
+        <a href="/" class="mobile-logo">⚡ GadgetHub</a>
+        <div class="header-actions" id="auth-links"></div>
+    </header>
+
+    <main class="main-content">
+        <h1>Search Results</h1>
+        <div class="search-bar" style="margin-bottom: 24px; max-width: 600px;">
+            <input type="text" id="search-input" placeholder="Search products..." style="flex: 1;">
+            <button id="search-btn">🔍</button>
+        </div>
+        <div id="search-results" class="products-grid">
+            <!-- JS populated -->
+        </div>
+        <div id="search-pagination" class="pagination-container"></div>
+    </main>
+
+    <nav class="mobile-nav">
+        <a href="/">🏠<span>Home</span></a>
+        <a href="/categories.html">📂<span>Categories</span></a>
+        <a href="/cart.html">🛒<span>Cart</span><span class="badge" data-cart-count>0</span></a>
+        <a href="/wishlist.html">❤️<span>Wishlist</span><span class="badge" data-wish-count>0</span></a>
+        <a href="/profile.html">👤<span>Profile</span></a>
+    </nav>
+
+    <script type="module">
+        import { App } from '/js/core/app.js';
+        import { API, formatNaira, debounce, lazyLoadImages } from '/js/core/api.js';
+        import { UI } from '/js/core/ui.js';
+
+        class SearchPage {
+            static state = { page: 1, query: '' };
+
+            static async init() {
+                const params = new URLSearchParams(window.location.search);
+                this.state.query = params.get('q') || '';
+                document.getElementById('search-input').value = this.state.query;
+                
+                if (this.state.query) await this.search();
+                
+                document.getElementById('search-btn').addEventListener('click', () => {
+                    this.state.query = document.getElementById('search-input').value;
+                    this.state.page = 1;
+                    this.search();
+                });
+                
+                document.getElementById('search-input').addEventListener('input', debounce(() => {
+                    this.state.query = document.getElementById('search-input').value;
+                    this.state.page = 1;
+                    if (this.state.query.length > 2) this.search();
+                }, 500));
+            }
+
+            static async search() {
+                const container = document.getElementById('search-results');
+                UI.showSkeleton(container, 8, 'card');
+                
+                try {
+                    const data = await API.post('/products/search/', {
+                        search_term: this.state.query,
+                        limit: 24,
+                        page_number: this.state.page,
+                        sort_option: 2
+                    });
+                    
+                    const products = data.success || [];
+                    if (!products.length) {
+                        container.innerHTML = `
+                            <div class="empty-state" style="grid-column: 1 / -1;">
+                                <h3>No results for "${this.state.query}"</h3>
+                                <p>Try different keywords or browse categories</p>
+                                <a href="/products.html" class="btn-primary">Browse All</a>
+                            </div>`;
+                        return;
+                    }
+                    
+                    container.innerHTML = products.map(p => UI.renderProductCard(p)).join('');
+                    lazyLoadImages();
+                    
+                    // Bind events
+                    container.querySelectorAll('.btn-add-cart').forEach(btn => {
+                        btn.addEventListener('click', async (e) => {
+                            e.stopPropagation();
+                            try {
+                                await API.post('/products/cart/', { product_id: parseInt(btn.dataset.id), quantity: 1 });
+                                UI.showToast('Added to cart', 'success');
+                                App.updateCounts();
+                            } catch (err) { UI.showToast(err.message, 'error'); }
+                        });
+                    });
+                    
+                    container.querySelectorAll('.product-card').forEach(card => {
+                        card.addEventListener('click', () => {
+                            window.location.href = `/product-detail.html?id=${card.dataset.id}`;
+                        });
+                    });
+                    
+                } catch (e) {
+                    container.innerHTML = '<p class="error">Search failed</p>';
+                }
+            }
+        }
+
+        App.init().then(() => SearchPage.init());
+    </script>
+</body>
+</html>

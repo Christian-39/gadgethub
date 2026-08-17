@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="system">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy — GadgetHub</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/dark-mode.css">
+</head>
+<body>
+    <div id="overlay" class="overlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="/" class="logo">⚡ GadgetHub</a>
+            <button class="close-sidebar" id="close-sidebar">✕</button>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="/">🏠 Home</a>
+            <a href="/products.html">🛍️ Products</a>
+            <a href="/cart.html">🛒 Cart</a>
+            <a href="/customer-care.html">🎧 Support</a>
+        </nav>
+        <div class="sidebar-footer">
+            <button data-theme-toggle class="theme-toggle">🌓 Theme</button>
+        </div>
+    </aside>
+
+    <header class="main-header">
+        <button class="menu-toggle" id="menu-toggle">☰</button>
+        <a href="/" class="mobile-logo">⚡ GadgetHub</a>
+    </header>
+
+    <main class="main-content">
+        <h1>Privacy Policy</h1>
+        <div class="care-card" style="max-width: 800px;">
+            <p><strong>Last Updated:</strong> August 2026</p>
+            
+            <h3>1. Information We Collect</h3>
+            <p>We collect information you provide directly, such as your name, email address, phone number, delivery address, and payment details. We also collect transaction data through our integration with Payuee.</p>
+            
+            <h3>2. How We Use Your Information</h3>
+            <p>Your information is used to process orders, facilitate escrow payments, arrange delivery, and provide customer support. We do not sell your personal data to third parties.</p>
+            
+            <h3>3. Payment Security</h3>
+            <p>All payment processing is handled by Payuee. GadgetHub does not store your bank account or card details. Payuee uses 256-bit AES encryption and HMAC-SHA256 signing for all transactions.</p>
+            
+            <h3>4. Cookies</h3>
+            <p>We use HttpOnly cookies for authentication. These cookies cannot be accessed by client-side scripts and are transmitted securely over HTTPS.</p>
+            
+            <h3>5. Data Retention</h3>
+            <p>We retain your data for as long as your account is active or as needed to provide services. You may request account deletion by contacting support.</p>
+            
+            <h3>6. Your Rights</h3>
+            <p>You have the right to access, correct, or delete your personal information. Contact us at support@gadgethub.ng to exercise these rights.</p>
+            
+            <h3>7. Contact</h3>
+            <p>For privacy-related inquiries, email us at privacy@gadgethub.ng.</p>
+        </div>
+    </main>
+
+    <nav class="mobile-nav">
+        <a href="/">🏠<span>Home</span></a>
+        <a href="/categories.html">📂<span>Categories</span></a>
+        <a href="/cart.html">🛒<span>Cart</span></a>
+        <a href="/wishlist.html">❤️<span>Wishlist</span></a>
+        <a href="/profile.html">👤<span>Profile</span></a>
+    </nav>
+
+    <script type="module">
+        import { App } from '/js/core/app.js';
+        App.init();
+    </script>
+</body>
+</html>

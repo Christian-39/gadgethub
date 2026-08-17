@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="system">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications — GadgetHub</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/dark-mode.css">
+</head>
+<body>
+    <div id="overlay" class="overlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="/" class="logo">⚡ GadgetHub</a>
+            <button class="close-sidebar" id="close-sidebar">✕</button>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="/">🏠 Home</a>
+            <a href="/products.html">🛍️ Products</a>
+            <a href="/categories.html">📂 Categories</a>
+            <a href="/cart.html">🛒 Cart <span class="badge" data-cart-count>0</span></a>
+            <a href="/wishlist.html">❤️ Wishlist <span class="badge" data-wish-count>0</span></a>
+            <a href="/orders.html">📦 Orders</a>
+            <a href="/wallet.html">💰 Wallet</a>
+            <a href="/profile.html">👤 Profile</a>
+            <a href="/notifications.html" class="active">🔔 Notifications</a>
+            <a href="/customer-care.html">🎧 Support</a>
+        </nav>
+        <div class="sidebar-footer">
+            <button data-theme-toggle class="theme-toggle">🌓 Theme</button>
+        </div>
+    </aside>
+
+    <header class="main-header">
+        <button class="menu-toggle" id="menu-toggle">☰</button>
+        <a href="/" class="mobile-logo">⚡ GadgetHub</a>
+        <div class="header-actions" id="auth-links"></div>
+    </header>
+
+    <main class="main-content">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+            <h1>Notifications</h1>
+            <button id="mark-all-read" class="btn-outline">Mark All Read</button>
+        </div>
+        <div id="notifications-list" class="transactions-list">
+            <!-- JS populated -->
+        </div>
+    </main>
+
+    <nav class="mobile-nav">
+        <a href="/">🏠<span>Home</span></a>
+        <a href="/categories.html">📂<span>Categories</span></a>
+        <a href="/cart.html">🛒<span>Cart</span><span class="badge" data-cart-count>0</span></a>
+        <a href="/wishlist.html">❤️<span>Wishlist</span><span class="badge" data-wish-count>0</span></a>
+        <a href="/profile.html">👤<span>Profile</span></a>
+    </nav>
+
+    <script type="module">
+        import { App } from '/js/core/app.js';
+        import { API } from '/js/core/api.js';
+        import { UI } from '/js/core/ui.js';
+
+        class NotificationsPage {
+            static async init() {
+                const container = document.getElementById('notifications-list');
+                try {
+                    const data = await API.get('/notifications/');
+                    const notifications = data.notifications || [];
+                    
+                    if (!notifications.length) {
+                        container.innerHTML = `
+                            <div class="empty-state">
+                                <h3>No notifications</h3>
+                                <p>You're all caught up!</p>
+                            </div>`;
+                        return;
+                    }
+                    
+                    container.innerHTML = notifications.map(n => `
+                        <div class="transaction-item ${n.is_read ? '' : 'unread'}" data-id="${n.id}" style="${n.is_read ? '' : 'background: var(--surface); border-left: 3px solid var(--primary);'}">
+                            <div class="tx-icon">${n.type === 'order' ? '📦' : n.type === 'wallet' ? '💰' : n.type === 'promo' ? '🎁' : '🔔'}</div>
+                            <div class="tx-info">
+                                <strong>${n.title}</strong>
+                                <p>${n.message}</p>
+                                <span>${n.created_at}</span>
+                            </div>
+                            ${!n.is_read ? `<button class="btn-read" data-id="${n.id}">Mark read</button>` : ''}
+                        </div>
+                    `).join('');
+                    
+                    container.querySelectorAll('.btn-read').forEach(btn => {
+                        btn.addEventListener('click', async () => {
+                            try {
+                                await API.post(`/notifications/${btn.dataset.id}/read/`);
+                                btn.closest('.transaction-item').style.borderLeft = 'none';
+                                btn.remove();
+                            } catch (e) {}
+                        });
+                    });
+                } catch (e) {
+                    container.innerHTML = '<p class="error">Failed to load notifications</p>';
+                }
+                
+                document.getElementById('mark-all-read').addEventListener('click', async () => {
+                    try {
+                        await API.post('/notifications/read-all/');
+                        UI.showToast('All marked as read', 'success');
+                        this.init();
+                    } catch (e) {}
+                });
+            }
+        }
+
+        App.init().then(() => NotificationsPage.init());
+    </script>
+</body>
+</html>

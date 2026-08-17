@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="system">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ — GadgetHub</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/dark-mode.css">
+</head>
+<body>
+    <div id="overlay" class="overlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="/" class="logo">⚡ GadgetHub</a>
+            <button class="close-sidebar" id="close-sidebar">✕</button>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="/">🏠 Home</a>
+            <a href="/products.html">🛍️ Products</a>
+            <a href="/categories.html">📂 Categories</a>
+            <a href="/cart.html">🛒 Cart <span class="badge" data-cart-count>0</span></a>
+            <a href="/wishlist.html">❤️ Wishlist <span class="badge" data-wish-count>0</span></a>
+            <a href="/orders.html">📦 Orders</a>
+            <a href="/wallet.html">💰 Wallet</a>
+            <a href="/profile.html">👤 Profile</a>
+            <a href="/customer-care.html" class="active">🎧 Support</a>
+        </nav>
+        <div class="sidebar-footer">
+            <button data-theme-toggle class="theme-toggle">🌓 Theme</button>
+        </div>
+    </aside>
+
+    <header class="main-header">
+        <button class="menu-toggle" id="menu-toggle">☰</button>
+        <a href="/" class="mobile-logo">⚡ GadgetHub</a>
+        <div class="header-actions" id="auth-links"></div>
+    </header>
+
+    <main class="main-content">
+        <h1>Frequently Asked Questions</h1>
+        <div class="faq-list" style="display: flex; flex-direction: column; gap: 12px; max-width: 800px;">
+            <details>
+                <summary>How does Payuee escrow work?</summary>
+                <p>When you place an order, funds are locked in Payuee's secure escrow. The vendor is notified to ship your item. Once delivered, you scan the QR code and enter your transaction PIN to release funds. If delivery fails, funds are automatically refunded.</p>
+            </details>
+            <details>
+                <summary>How do I fund my wallet?</summary>
+                <p>Go to the Wallet page to view your dedicated virtual account details. Transfer funds from your bank app to this account. Your wallet will be credited automatically once the transfer is confirmed.</p>
+            </details>
+            <details>
+                <summary>What is the delivery timeline?</summary>
+                <p>Delivery typically takes 3-10 business days depending on your location and the vendor. Each product page shows an estimated delivery duration. You can track your order status in real-time from the Orders page.</p>
+            </details>
+            <details>
+                <summary>Can I cancel my order?</summary>
+                <p>Yes, orders can be cancelled within the first 30% of the estimated delivery timeline. After this window, the order is locked for delivery. Enter your transaction PIN to authorize cancellation.</p>
+            </details>
+            <details>
+                <summary>What happens if I receive a damaged item?</summary>
+                <p>Do not confirm delivery. Instead, report the issue immediately from your Orders page. Payuee will investigate and process a refund if the claim is validated. Funds remain locked in escrow during investigation.</p>
+            </details>
+            <details>
+                <summary>How do I verify delivery?</summary>
+                <p>When your order arrives, scan the QR code on the package using your phone camera or the in-app scanner. Then enter your 6-digit transaction PIN to confirm receipt and release escrow funds.</p>
+            </details>
+            <details>
+                <summary>Is my payment information secure?</summary>
+                <p>Yes. GadgetHub does not store your card or bank details. All payments are processed through Payuee's PCI-DSS compliant infrastructure with 256-bit AES encryption and HMAC-SHA256 request signing.</p>
+            </details>
+            <details>
+                <summary>How do I become a vendor?</summary>
+                <p>Currently, vendors are managed directly by Payuee. If you are interested in selling on GadgetHub, please contact our business team at business@gadgethub.ng.</p>
+            </details>
+        </div>
+    </main>
+
+    <nav class="mobile-nav">
+        <a href="/">🏠<span>Home</span></a>
+        <a href="/categories.html">📂<span>Categories</span></a>
+        <a href="/cart.html">🛒<span>Cart</span><span class="badge" data-cart-count>0</span></a>
+        <a href="/wishlist.html">❤️<span>Wishlist</span><span class="badge" data-wish-count>0</span></a>
+        <a href="/profile.html">👤<span>Profile</span></a>
+    </nav>
+
+    <script type="module">
+        import { App } from '/js/core/app.js';
+        App.init();
+    </script>
+</body>
+</html>

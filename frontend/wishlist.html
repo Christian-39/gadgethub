@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="system">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wishlist — GadgetHub</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/dark-mode.css">
+</head>
+<body>
+    <div id="overlay" class="overlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="/" class="logo">⚡ GadgetHub</a>
+            <button class="close-sidebar" id="close-sidebar">✕</button>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="/">🏠 Home</a>
+            <a href="/products.html">🛍️ Products</a>
+            <a href="/categories.html">📂 Categories</a>
+            <a href="/cart.html">🛒 Cart <span class="badge" data-cart-count>0</span></a>
+            <a href="/wishlist.html" class="active">❤️ Wishlist <span class="badge" data-wish-count>0</span></a>
+            <a href="/orders.html">📦 Orders</a>
+            <a href="/wallet.html">💰 Wallet</a>
+            <a href="/profile.html">👤 Profile</a>
+            <a href="/customer-care.html">🎧 Support</a>
+        </nav>
+        <div class="sidebar-footer">
+            <button data-theme-toggle class="theme-toggle">🌓 Theme</button>
+        </div>
+    </aside>
+
+    <header class="main-header">
+        <button class="menu-toggle" id="menu-toggle">☰</button>
+        <a href="/" class="mobile-logo">⚡ GadgetHub</a>
+        <div class="header-actions" id="auth-links"></div>
+    </header>
+
+    <main class="main-content">
+        <h1>My Wishlist</h1>
+        <div id="wishlist-grid" class="products-grid">
+            <!-- JS populated -->
+        </div>
+    </main>
+
+    <nav class="mobile-nav">
+        <a href="/">🏠<span>Home</span></a>
+        <a href="/categories.html">📂<span>Categories</span></a>
+        <a href="/cart.html">🛒<span>Cart</span><span class="badge" data-cart-count>0</span></a>
+        <a href="/wishlist.html" class="active">❤️<span>Wishlist</span><span class="badge" data-wish-count>0</span></a>
+        <a href="/profile.html">👤<span>Profile</span></a>
+    </nav>
+
+    <script type="module">
+        import { App } from '/js/core/app.js';
+        import { API, formatNaira, lazyLoadImages } from '/js/core/api.js';
+        import { UI } from '/js/core/ui.js';
+
+        class WishlistPage {
+            static async init() {
+                const container = document.getElementById('wishlist-grid');
+                try {
+                    const data = await API.get('/products/wishlist/');
+                    const items = Array.isArray(data) ? data : (data.results || []);
+                    
+                    if (!items.length) {
+                        container.innerHTML = `
+                            <div class="empty-state" style="grid-column: 1 / -1;">
+                                <h3>Your wishlist is empty</h3>
+                                <p>Save items you love for later</p>
+                                <a href="/products.html" class="btn-primary">Browse Products</a>
+                            </div>`;
+                        return;
+                    }
+                    
+                    container.innerHTML = items.map(item => {
+                        const p = item.product;
+                        const img = p.images?.[0]?.url ? `https://payuee.com/image/${p.images[0].url}` : '/assets/placeholder.jpg';
+                        return `
+                            <div class="product-card" data-id="${p.payuee_id}">
+                                <div class="product-image">
+                                    <img data-src="${img}" alt="${p.title}" class="lazy-img">
+                                    <button class="btn-wishlist active" data-id="${p.payuee_id}">❤</button>
+                                </div>
+                                <div class="product-info">
+                                    <h3>${p.title}</h3>
+                                    <p class="product-price">${formatNaira(p.selling_price)}</p>
+                                    <p class="product-stock ${p.stock_status}">${p.stock_remaining} left</p>
+                                </div>
+                                <button class="btn-add-cart" data-id="${p.payuee_id}">Add to Cart</button>
+                            </div>`;
+                    }).join('');
+                    
+                    lazyLoadImages();
+                    
+                    container.querySelectorAll('.btn-wishlist').forEach(btn => {
+                        btn.addEventListener('click', async (e) => {
+                            e.stopPropagation();
+                            try {
+                                await API.delete('/products/wishlist/', { product_id: parseInt(btn.dataset.id) });
+                                btn.closest('.product-card').remove();
+                                UI.showToast('Removed from wishlist', 'success');
+                                App.updateCounts();
+                            } catch (err) {
+                                UI.showToast(err.message, 'error');
+                            }
+                        });
+                    });
+                    
+                    container.querySelectorAll('.btn-add-cart').forEach(btn => {
+                        btn.addEventListener('click', async (e) => {
+                            e.stopPropagation();
+                            try {
+                                await API.post('/products/cart/', { product_id: parseInt(btn.dataset.id), quantity: 1 });
+                                UI.showToast('Added to cart', 'success');
+                                App.updateCounts();
+                            } catch (err) {
+                                UI.showToast(err.message, 'error');
+                            }
+                        });
+                    });
+                    
+                    container.querySelectorAll('.product-card').forEach(card => {
+                        card.addEventListener('click', (e) => {
+                            if (!e.target.closest('button')) {
+                                window.location.href = `/product-detail.html?id=${card.dataset.id}`;
+                            }
+                        });
+                    });
+                } catch (e) {
+                    container.innerHTML = '<p class="error">Failed to load wishlist</p>';
+                }
+            }
+        }
+
+        App.init().then(() => WishlistPage.init());
+    </script>
+</body>
+</html>
