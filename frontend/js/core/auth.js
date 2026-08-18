@@ -3,11 +3,17 @@ import { API } from './api.js';
 class Auth {
     static async check() {
         try {
-            const user = await API.get('/auth/profile/');
+            // skipAuthRedirect: a guest hitting this is a normal 401,
+            // not a session expiry - it must not bounce them to
+            // /login.html, or nobody could browse products while
+            // logged out.
+            const user = await API.get('/auth/profile/', { skipAuthRedirect: true });
             if (user) {
                 localStorage.setItem('user', JSON.stringify(user));
                 return user;
             }
+            localStorage.removeItem('user');
+            return null;
         } catch {
             localStorage.removeItem('user');
             return null;

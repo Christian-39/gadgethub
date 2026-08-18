@@ -68,6 +68,29 @@ body {
     cursor: pointer;
 }
 
+.sidebar-user {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+}
+
+.sidebar-user .nav-user {
+    width: 100%;
+}
+
+.sidebar-user .nav-user img {
+    width: 40px;
+    height: 40px;
+}
+
+.sidebar-guest {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-weight: 500;
+}
+
 .sidebar-nav {
     flex: 1;
     padding: 16px 12px;
@@ -103,19 +126,22 @@ body {
     border-radius: 10px;
 }
 
-.sidebar-footer {
-    padding: 20px;
-    border-top: 1px solid var(--border);
-}
-
 .theme-toggle {
-    width: 100%;
-    padding: 10px;
+    /* Now lives in .header-actions (topbar) instead of the old
+       sidebar footer - sized as a compact icon button to match
+       the other header controls. */
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     border: 1px solid var(--border);
-    border-radius: 8px;
+    border-radius: 50%;
     background: var(--bg);
     cursor: pointer;
-    font-weight: 500;
+    font-size: 1.1rem;
+    flex-shrink: 0;
 }
 
 .main-header {
@@ -1310,6 +1336,7 @@ body {
 .form-group input,
 .form-group select,
 .form-group textarea {
+    width: 100%;
     padding: 10px 14px;
     border: 1px solid var(--border);
     border-radius: 8px;
@@ -1431,6 +1458,7 @@ body {
     justify-content: center;
     min-height: 100vh;
     padding: 24px;
+    box-sizing: border-box;
 }
 
 .auth-container {
@@ -1441,6 +1469,7 @@ body {
     padding: 40px;
     border: 1px solid var(--border);
     box-shadow: var(--shadow);
+    box-sizing: border-box;
 }
 
 .auth-logo {
@@ -1619,6 +1648,13 @@ body {
     opacity: 0;
     transition: all 0.3s ease;
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    /* Validation/auth error text can be long (multiple field errors
+       joined together) - without a max-width and wrapping, this
+       overflowed off-screen on mobile instead of being readable. */
+    max-width: min(90vw, 420px);
+    white-space: normal;
+    text-align: center;
+    word-break: break-word;
 }
 
 .toast.show {
@@ -1793,6 +1829,15 @@ body {
     .stat-card {
         min-width: auto;
         padding: 16px;
+    }
+    .auth-page {
+        padding: 16px;
+    }
+    .auth-container {
+        padding: 20px;
+    }
+    .auth-logo {
+        font-size: 1.3rem;
     }
 }
 

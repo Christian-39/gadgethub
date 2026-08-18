@@ -1,4 +1,4 @@
-import { API, formatNaira } from '../core/api.js';
+import { API, API_BASE, formatNaira } from '../core/api.js';
 import { UI } from '../core/ui.js';
 import { Auth } from '../core/auth.js';
 

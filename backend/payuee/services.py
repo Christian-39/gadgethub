@@ -702,9 +702,15 @@ class PayueeService:
             product_id,
         )
 
+        # NOTE: the Payuee docs define this endpoint as singular
+        # "/product/{id}" (unlike the plural "/products" list and
+        # "/products/search" endpoints). Using "/products/{id}" here
+        # was hitting a route that doesn't exist on Payuee and
+        # returning 404s, which is why product detail / related
+        # products failed to load.
         return self._request(
             "GET",
-            f"/products/{product_id}",
+            f"/product/{product_id}",
         )
 
     # ============================================================

@@ -4,6 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard — GadgetHub</title>
+        <script>
+        (function () {
+            try {
+                var saved = localStorage.getItem('theme') || 'system';
+                var mode = saved === 'system'
+                    ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+                    : saved;
+                document.documentElement.setAttribute('data-theme', mode);
+            } catch (e) {}
+        })();
+    </script>
     <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/css/dark-mode.css">
     <link rel="stylesheet" href="/css/admin.css">

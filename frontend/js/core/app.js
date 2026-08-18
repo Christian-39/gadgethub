@@ -1,4 +1,4 @@
-import { API, lazyLoadImages } from './api.js';
+import { API, lazyLoadImages, debounce } from './api.js';
 import { Auth } from './auth.js';
 import { Theme } from './theme.js';
 import { UI } from './ui.js';
@@ -8,19 +8,19 @@ class App {
         Theme.init();
         await this.updateNav();
         this.bindGlobalEvents();
-        
-        // Update cart/wishlist counts
-        if (Auth.isAuthenticated()) {
-            this.updateCounts();
-        }
+
+        // Always run - guests need their counts hidden, not skipped.
+        this.updateCounts();
     }
 
     static async updateNav() {
         const user = await Auth.check();
         const authLinks = document.getElementById('auth-links');
         const mobileAuth = document.getElementById('mobile-auth');
-        
+        const sidebarUser = document.getElementById('sidebar-user');
+
         if (user) {
+            const fullName = `${user.first_name || ''} ${user.last_name || ''}`.trim();
             const html = `
                 <a href="/profile.html" class="nav-user">
                     <img src="${user.profile_picture || '/assets/avatar.svg'}" alt="Profile">
@@ -30,20 +30,45 @@ class App {
             `;
             if (authLinks) authLinks.innerHTML = html;
             if (mobileAuth) mobileAuth.innerHTML = html;
-            
+
             document.getElementById('logout-btn')?.addEventListener('click', () => Auth.logout());
+
+            if (sidebarUser) {
+                sidebarUser.innerHTML = `
+                    <a href="/profile.html" class="nav-user">
+                        <img src="${user.profile_picture || '/assets/avatar.svg'}" alt="Profile">
+                        <span>${fullName || user.email}</span>
+                    </a>
+                `;
+            }
         } else {
             const html = `<a href="/login.html" class="btn-primary">Login</a>`;
             if (authLinks) authLinks.innerHTML = html;
             if (mobileAuth) mobileAuth.innerHTML = html;
+
+            if (sidebarUser) {
+                sidebarUser.innerHTML = `<a href="/login.html" class="sidebar-guest">👤 Sign in</a>`;
+            }
         }
     }
 
     static async updateCounts() {
         try {
             const user = Auth.getUser();
-            if (!user) return;
-            
+
+            // Guests have no cart/wishlist tied to an account - the
+            // badges must be hidden rather than showing a stale/default
+            // "0" left over from the static HTML.
+            if (!user) {
+                document.querySelectorAll('[data-cart-count]').forEach(el => {
+                    el.style.display = 'none';
+                });
+                document.querySelectorAll('[data-wish-count]').forEach(el => {
+                    el.style.display = 'none';
+                });
+                return;
+            }
+
             // These would be fetched from API, using localStorage cache for speed
             const cartCount = user.cart_count || 0;
             const wishCount = user.wishlist_count || 0;
@@ -74,15 +99,29 @@ class App {
             document.getElementById('overlay').classList.remove('show');
         });
 
-        // Search debounce
+        // Topbar search (left side of header) - navigates to the
+        // dedicated search page, same as pressing enter/clicking the
+        // search icon.
         const searchInput = document.getElementById('global-search');
+        const searchBtn = document.getElementById('global-search-btn');
+        const goToSearch = () => {
+            const value = searchInput.value.trim();
+            if (value.length > 0) {
+                window.location.href = `/search.html?q=${encodeURIComponent(value)}`;
+            }
+        };
         if (searchInput) {
             searchInput.addEventListener('input', debounce((e) => {
-                if (e.target.value.length > 2) {
-                    window.location.href = `/search.html?q=${encodeURIComponent(e.target.value)}`;
-                }
+                if (e.target.value.trim().length > 2) goToSearch();
             }, 500));
+            searchInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    goToSearch();
+                }
+            });
         }
+        searchBtn?.addEventListener('click', goToSearch);
     }
 }
 

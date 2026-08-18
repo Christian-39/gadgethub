@@ -18,8 +18,15 @@ class API {
 
         try {
             const response = await fetch(url, config);
-            
-            if (response.status === 401) {
+
+            // A 401 here just means "not logged in". For a background
+            // identity check (Auth.check on page load, used so guests
+            // can browse) that's expected and should NOT bounce the
+            // user to /login.html - it should just resolve to "no
+            // user" so guests can keep browsing products. Callers that
+            // need the old "redirect on session expiry" behavior (e.g.
+            // cart/wishlist actions) can omit skipAuthRedirect.
+            if (response.status === 401 && !options.skipAuthRedirect) {
                 // Try refresh
                 const refreshed = await this.refreshToken();
                 if (refreshed) {
@@ -30,15 +37,41 @@ class API {
                 }
             }
 
-            const data = await response.json();
+            let data = null;
+            try {
+                data = await response.json();
+            } catch {
+                data = null;
+            }
+
             if (!response.ok) {
-                throw new Error(data.error || data.detail || 'Request failed');
+                throw new Error(this.extractErrorMessage(data));
             }
             return data;
         } catch (error) {
             console.error('API Error:', error);
             throw error;
         }
+    }
+
+    // Turns a DRF-style error body into a readable message. Handles:
+    // - { error: "..." } / { detail: "..." } / { message: "..." }
+    // - field validation errors: { email: ["This field is required."], ... }
+    // - { non_field_errors: [...] }
+    static extractErrorMessage(data) {
+        if (!data) return 'Request failed';
+        if (typeof data === 'string') return data;
+        if (data.error) return data.error;
+        if (data.detail) return data.detail;
+        if (data.message) return data.message;
+
+        const parts = [];
+        for (const [key, value] of Object.entries(data)) {
+            const text = Array.isArray(value) ? value.join(' ') : String(value);
+            if (!text) continue;
+            parts.push(key === 'non_field_errors' ? text : `${key}: ${text}`);
+        }
+        return parts.length ? parts.join(' ') : 'Request failed';
     }
 
     static async refreshToken() {
@@ -53,10 +86,10 @@ class API {
         }
     }
 
-    static get(endpoint) { return this.request(endpoint, { method: 'GET' }); }
-    static post(endpoint, body) { return this.request(endpoint, { method: 'POST', body }); }
-    static patch(endpoint, body) { return this.request(endpoint, { method: 'PATCH', body }); }
-    static delete(endpoint) { return this.request(endpoint, { method: 'DELETE' }); }
+    static get(endpoint, options = {}) { return this.request(endpoint, { method: 'GET', ...options }); }
+    static post(endpoint, body, options = {}) { return this.request(endpoint, { method: 'POST', body, ...options }); }
+    static patch(endpoint, body, options = {}) { return this.request(endpoint, { method: 'PATCH', body, ...options }); }
+    static delete(endpoint, options = {}) { return this.request(endpoint, { method: 'DELETE', ...options }); }
 }
 
 // Currency formatter
@@ -90,4 +123,4 @@ const lazyLoadImages = () => {
     images.forEach(img => observer.observe(img));
 };
 
-export { API, formatNaira, debounce, lazyLoadImages };
+export { API, API_BASE, formatNaira, debounce, lazyLoadImages };

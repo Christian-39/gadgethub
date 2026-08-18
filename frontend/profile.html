@@ -4,6 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile — GadgetHub</title>
+        <script>
+        (function () {
+            try {
+                var saved = localStorage.getItem('theme') || 'system';
+                var mode = saved === 'system'
+                    ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+                    : saved;
+                document.documentElement.setAttribute('data-theme', mode);
+            } catch (e) {}
+        })();
+    </script>
     <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/css/dark-mode.css">
 </head>
@@ -13,6 +24,7 @@
             <a href="/" class="logo">⚡ GadgetHub</a>
             <button class="close-sidebar" id="close-sidebar">✕</button>
         </div>
+        <div class="sidebar-user" id="sidebar-user"></div>
         <nav class="sidebar-nav">
             <a href="/">🏠 Home</a>
             <a href="/products.html">🛍️ Products</a>
@@ -23,13 +35,18 @@
             <a href="/wallet.html">💰 Wallet</a>
             <a href="/profile.html" class="active">👤 Profile</a>
             <a href="/customer-care.html">🎧 Support</a>
-        </nav>
-        <div class="sidebar-footer">
-            <button data-theme-toggle class="theme-toggle">🌓 Theme</button>
-        </div></aside>
+        </nav></aside>
     <header class="main-header">
         <button class="menu-toggle" id="menu-toggle">☰</button>
         <a href="/" class="mobile-logo">⚡ GadgetHub</a>
+        <div class="search-bar">
+            <input type="text" id="global-search" placeholder="Search products...">
+            <button id="global-search-btn" aria-label="Search">🔍</button>
+        </div>
+        <div class="header-actions">
+            <button data-theme-toggle class="theme-toggle" aria-label="Toggle theme">🌓</button>
+            <div id="auth-links"></div>
+        </div>
     </header>
 
     <main class="main-content">

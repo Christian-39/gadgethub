@@ -83,7 +83,11 @@ class ProductsPage {
 
             console.log('Products API response:', data);
 
-            const products = data.products || [];
+            // Payuee (and our backend passthrough) return the array
+            // under "success", not "products" - this was the reason
+            // /products.html always rendered an empty grid even
+            // though the API call itself succeeded.
+            const products = data.success || [];
             const paginationData = data.pagination || {};
 
             if (products.length === 0 && this.state.page === 1) {
