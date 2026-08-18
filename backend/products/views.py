@@ -14,6 +14,32 @@ class StandardResultsSetPagination(PageNumberPagination):
     page_size_query_param = 'limit'
     max_page_size = 100
 
+class ProductCategoriesView(APIView):
+    """
+    Payuee does not expose a "list categories" endpoint - the category
+    taxonomy is instead a fixed, documented set of values accepted by
+    the `category` filter on POST /v1/products and /v1/products/search
+    (outfits, jewelry, kids-accessories, cars-car-parts, tools,
+    gadgets, others). This view is the single source of truth for
+    that taxonomy on our side, so the frontend no longer needs to
+    duplicate/guess it in three different hardcoded lists.
+    """
+    permission_classes = [permissions.AllowAny]
+
+    CATEGORIES = [
+        {'id': 'gadgets', 'name': 'Gadgets', 'icon': '💻'},
+        {'id': 'outfits', 'name': 'Fashion', 'icon': '👕'},
+        {'id': 'jewelry', 'name': 'Jewelry', 'icon': '💍'},
+        {'id': 'cars-car-parts', 'name': 'Auto Parts', 'icon': '🚗'},
+        {'id': 'tools', 'name': 'Tools', 'icon': '🔧'},
+        {'id': 'kids-accessories', 'name': 'Kids', 'icon': '🧸'},
+        {'id': 'others', 'name': 'Others', 'icon': '📦'},
+    ]
+
+    def get(self, request):
+        return Response({'success': self.CATEGORIES})
+
+
 class ProductListView(APIView):
     permission_classes = [permissions.AllowAny]
 
