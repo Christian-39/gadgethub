@@ -41,7 +41,7 @@
 
     <header class="main-header">
         <button class="menu-toggle" id="menu-toggle">☰</button>
-        <a href="/" class="mobile-logo">⚡ GadgetHub</a>
+        <a href="/" class="mobile-logo">⚡ Search Results</a>
         <div class="search-bar">
             <input type="text" id="global-search" placeholder="Search products...">
             <button id="global-search-btn" aria-label="Search">🔍</button>
@@ -84,7 +84,16 @@
                 const params = new URLSearchParams(window.location.search);
                 this.state.query = params.get('q') || '';
                 document.getElementById('search-input').value = this.state.query;
-                
+
+                // Reflect the active query in the topbar's fixed page-name
+                // slot instead of the generic "Search Results" label.
+                if (this.state.query) {
+                    const pageNameEl = document.querySelector('.main-header .mobile-logo');
+                    if (pageNameEl) {
+                        pageNameEl.textContent = `⚡ "${this.state.query}"`;
+                    }
+                }
+
                 if (this.state.query) await this.search();
                 
                 document.getElementById('search-btn').addEventListener('click', () => {

@@ -1,4 +1,4 @@
-import { API, formatNaira } from '../core/api.js';
+import { API, formatNaira, lazyLoadImages } from '../core/api.js';
 import { UI } from '../core/ui.js';
 import { Auth } from '../core/auth.js';
 
@@ -84,6 +84,16 @@ class ProductDetailPage {
             `;
             
             this.bindEvents(id);
+
+            // The topbar's page-name slot starts as the generic
+            // "Product" label (set statically in the HTML so it's
+            // never blank while this loads) - once we actually know
+            // which product this is, reflect its title there instead.
+            const pageNameEl = document.querySelector('.main-header .mobile-logo');
+            if (pageNameEl) {
+                pageNameEl.textContent = `⚡ ${this.product.title}`;
+            }
+
             await this.loadReviews(id);
             await this.loadRelated(id);
         } catch (e) {

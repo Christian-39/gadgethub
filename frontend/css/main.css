@@ -167,9 +167,24 @@ body {
     cursor: pointer;
 }
 
+/* Fixed-width slot for the current page's name so it never grows/shrinks
+   with the text length - this is what keeps the search bar and the
+   right-side controls from shifting position as you move between pages. */
+.main-header .mobile-logo {
+    flex: 0 0 auto;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 .search-bar {
-    flex: 1;
-    max-width: 500px;
+    /* Fixed width (not flex:1) so the bar itself never resizes/moves,
+       whatever else is happening in the header (login vs logged-in
+       state, page name length, etc). */
+    flex: 0 1 420px;
+    width: 420px;
+    max-width: 420px;
     display: flex;
     align-items: center;
     background: var(--bg);
@@ -197,6 +212,10 @@ body {
     display: flex;
     align-items: center;
     gap: 12px;
+    /* Always pinned to the right edge of the header, independent of
+       the width of the search bar or the page-name slot. */
+    margin-left: auto;
+    flex-shrink: 0;
 }
 
 .nav-user {
@@ -1758,6 +1777,13 @@ body {
     .cart-summary,
     .checkout-summary {
         position: static;
+    }
+    .search-bar {
+        flex-basis: 260px;
+        width: 260px;
+    }
+    .main-header .mobile-logo {
+        max-width: 140px;
     }
 }
 

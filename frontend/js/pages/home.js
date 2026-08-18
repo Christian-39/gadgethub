@@ -35,22 +35,20 @@ class HomePage {
     static async loadCategories() {
         const container = document.getElementById('categories');
         if (!container) return;
-        
-        const categories = [
-            { id: 'gadgets', name: 'Gadgets', icon: '💻' },
-            { id: 'outfits', name: 'Fashion', icon: '👕' },
-            { id: 'jewelry', name: 'Jewelry', icon: '💍' },
-            { id: 'cars-car-parts', name: 'Auto', icon: '🚗' },
-            { id: 'tools', name: 'Tools', icon: '🔧' },
-            { id: 'kids-accessories', name: 'Kids', icon: '🧸' },
-        ];
-        
-        container.innerHTML = categories.map(c => `
-            <a href="/products.html?category=${c.id}" class="category-card">
-                <span class="cat-icon">${c.icon}</span>
-                <span class="cat-name">${c.name}</span>
-            </a>
-        `).join('');
+
+        try {
+            const data = await API.get('/products/categories/');
+            const categories = data.success || [];
+
+            container.innerHTML = categories.map(c => `
+                <a href="/products.html?category=${c.id}" class="category-card">
+                    <span class="cat-icon">${c.icon}</span>
+                    <span class="cat-name">${c.name}</span>
+                </a>
+            `).join('');
+        } catch (e) {
+            console.error('Categories load failed', e);
+        }
     }
 
     static async loadBestSellers() {

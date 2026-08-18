@@ -1,5 +1,6 @@
 import { API, formatNaira, debounce, lazyLoadImages } from '../core/api.js';
 import { UI } from '../core/ui.js';
+import { HomePage } from './home.js';
 
 class ProductsPage {
     static state = {
@@ -17,10 +18,29 @@ class ProductsPage {
         const params = new URLSearchParams(window.location.search);
         this.state.category = params.get('category') || 'all';
         this.state.sort = parseInt(params.get('sort')) || 5;
-        
+
+        await this.loadCategories();
         this.bindFilters();
         this.bindViewToggle();
         await this.loadProducts();
+    }
+
+    static async loadCategories() {
+        const select = document.getElementById('category-filter');
+        if (!select) return;
+
+        try {
+            const data = await API.get('/products/categories/');
+            const categories = data.success || [];
+            select.insertAdjacentHTML('beforeend', categories.map(c =>
+                `<option value="${c.id}">${c.name}</option>`
+            ).join(''));
+            // Options only exist now - reflect a category coming in
+            // via the URL (e.g. from a category card) in the select.
+            select.value = this.state.category;
+        } catch (e) {
+            console.error('Categories load failed', e);
+        }
     }
 
     static bindFilters() {

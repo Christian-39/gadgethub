@@ -41,7 +41,7 @@
 
     <header class="main-header">
         <button class="menu-toggle" id="menu-toggle">☰</button>
-        <a href="/" class="mobile-logo">Categories</a>
+        <a href="/" class="mobile-logo">⚡ Categories</a>
         <div class="search-bar">
             <input type="text" id="global-search" placeholder="Search products...">
             <button id="global-search-btn" aria-label="Search">🔍</button>
@@ -55,34 +55,7 @@
     <main class="main-content">
         <h1>All Categories</h1>
         <div class="categories-grid" id="all-categories">
-            <a href="/products.html?category=gadgets" class="category-card" style="padding: 40px;">
-                <span class="cat-icon" style="font-size: 3rem;">💻</span>
-                <span class="cat-name" style="font-size: 1.2rem;">Gadgets</span>
-            </a>
-            <a href="/products.html?category=outfits" class="category-card" style="padding: 40px;">
-                <span class="cat-icon" style="font-size: 3rem;">👕</span>
-                <span class="cat-name" style="font-size: 1.2rem;">Fashion</span>
-            </a>
-            <a href="/products.html?category=jewelry" class="category-card" style="padding: 40px;">
-                <span class="cat-icon" style="font-size: 3rem;">💍</span>
-                <span class="cat-name" style="font-size: 1.2rem;">Jewelry</span>
-            </a>
-            <a href="/products.html?category=cars-car-parts" class="category-card" style="padding: 40px;">
-                <span class="cat-icon" style="font-size: 3rem;">🚗</span>
-                <span class="cat-name" style="font-size: 1.2rem;">Auto Parts</span>
-            </a>
-            <a href="/products.html?category=tools" class="category-card" style="padding: 40px;">
-                <span class="cat-icon" style="font-size: 3rem;">🔧</span>
-                <span class="cat-name" style="font-size: 1.2rem;">Tools</span>
-            </a>
-            <a href="/products.html?category=kids-accessories" class="category-card" style="padding: 40px;">
-                <span class="cat-icon" style="font-size: 3rem;">🧸</span>
-                <span class="cat-name" style="font-size: 1.2rem;">Kids</span>
-            </a>
-            <a href="/products.html?category=others" class="category-card" style="padding: 40px;">
-                <span class="cat-icon" style="font-size: 3rem;">📦</span>
-                <span class="cat-name" style="font-size: 1.2rem;">Others</span>
-            </a>
+            <!-- JS populated -->
         </div>
     </main>
 
@@ -96,7 +69,25 @@
 
     <script type="module">
         import { App } from '/js/core/app.js';
-        App.init();
+        import { API } from '/js/core/api.js';
+
+        async function loadAllCategories() {
+            const container = document.getElementById('all-categories');
+            try {
+                const data = await API.get('/products/categories/');
+                const categories = data.success || [];
+                container.innerHTML = categories.map(c => `
+                    <a href="/products.html?category=${c.id}" class="category-card" style="padding: 40px;">
+                        <span class="cat-icon" style="font-size: 3rem;">${c.icon}</span>
+                        <span class="cat-name" style="font-size: 1.2rem;">${c.name}</span>
+                    </a>
+                `).join('');
+            } catch (e) {
+                container.innerHTML = '<p class="error">Failed to load categories</p>';
+            }
+        }
+
+        App.init().then(loadAllCategories);
     </script>
 </body>
 </html>
