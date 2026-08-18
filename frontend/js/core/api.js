@@ -2,7 +2,7 @@ const API_BASE =
     window.location.hostname === 'localhost' ||
     window.location.hostname === '127.0.0.1'
         ? 'http://127.0.0.1:8000/api'
-        : 'https://gadgethub-api.onrender.com/api';
+        : 'https://gadgethub-api-g8px.onrender.com/api';
 
 class API {
     static async request(endpoint, options = {}) {
