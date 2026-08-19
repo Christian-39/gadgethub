@@ -89,3 +89,169 @@ INFO 2026-08-17 21:58:30,752 services 3416 4764 Payuee request started | method=
 INFO 2026-08-17 21:58:30,752 services 3416 4764 Payuee HTTP attempt 1/3 | method=POST | url=https://escrow.payuee.com/v1/products
 INFO 2026-08-17 21:58:33,019 services 3416 4764 Payuee HTTP response | attempt=1/3 | method=POST | url=https://escrow.payuee.com/v1/products | status=200 | elapsed=2.267s
 INFO 2026-08-17 21:58:33,022 services 3416 4764 Payuee request successful | status=200
+INFO 2026-08-18 15:09:19,102 services 10232 13644 Payuee get_products called | filters={"category": "all", "min_price": 0, "max_price": 100000000, "page_number": 1, "sort_option": 5}
+INFO 2026-08-18 15:09:19,118 services 10232 13644 Payuee request started | method=POST | url=https://escrow.payuee.com/v1/products | request_path=/v1/products | retries=3
+INFO 2026-08-18 15:09:19,165 services 10232 13644 Payuee HTTP attempt 1/3 | method=POST | url=https://escrow.payuee.com/v1/products
+INFO 2026-08-18 15:09:22,243 services 10232 13644 Payuee HTTP response | attempt=1/3 | method=POST | url=https://escrow.payuee.com/v1/products | status=200 | elapsed=3.088s
+INFO 2026-08-18 15:09:22,243 services 10232 13644 Payuee request successful | status=200
+INFO 2026-08-18 15:16:59,551 services 10232 4044 Payuee get_products called | filters={"category": "all", "min_price": 0, "max_price": 100000000, "page_number": 1, "sort_option": 5}
+INFO 2026-08-18 15:16:59,551 services 10232 4044 Payuee request started | method=POST | url=https://escrow.payuee.com/v1/products | request_path=/v1/products | retries=3
+INFO 2026-08-18 15:16:59,551 services 10232 4044 Payuee HTTP attempt 1/3 | method=POST | url=https://escrow.payuee.com/v1/products
+INFO 2026-08-18 15:17:01,307 services 10232 4044 Payuee HTTP response | attempt=1/3 | method=POST | url=https://escrow.payuee.com/v1/products | status=200 | elapsed=1.759s
+INFO 2026-08-18 15:17:01,307 services 10232 4044 Payuee request successful | status=200
+INFO 2026-08-18 15:20:08,144 services 10232 11564 Payuee get_products called | filters={"category": "all", "page_number": 1, "sort_option": 1, "limit": 8}
+INFO 2026-08-18 15:20:08,144 services 10232 11564 Payuee request started | method=POST | url=https://escrow.payuee.com/v1/products | request_path=/v1/products | retries=3
+INFO 2026-08-18 15:20:08,144 services 10232 11564 Payuee HTTP attempt 1/3 | method=POST | url=https://escrow.payuee.com/v1/products
+INFO 2026-08-18 15:20:12,335 services 10232 11564 Payuee HTTP response | attempt=1/3 | method=POST | url=https://escrow.payuee.com/v1/products | status=200 | elapsed=4.190s
+INFO 2026-08-18 15:20:12,335 services 10232 11564 Payuee request successful | status=200
+INFO 2026-08-18 15:20:59,814 services 10232 11564 Payuee get_products called | filters={"category": "all", "page_number": 1, "sort_option": 2, "limit": 6}
+INFO 2026-08-18 15:20:59,814 services 10232 11564 Payuee request started | method=POST | url=https://escrow.payuee.com/v1/products | request_path=/v1/products | retries=3
+INFO 2026-08-18 15:20:59,814 services 10232 11564 Payuee HTTP attempt 1/3 | method=POST | url=https://escrow.payuee.com/v1/products
+INFO 2026-08-18 15:21:00,650 services 10232 11564 Payuee HTTP response | attempt=1/3 | method=POST | url=https://escrow.payuee.com/v1/products | status=200 | elapsed=0.836s
+INFO 2026-08-18 15:21:00,650 services 10232 11564 Payuee request successful | status=200
+INFO 2026-08-18 15:24:54,304 services 10232 11564 Payuee get_product_detail called | product_id=239
+INFO 2026-08-18 15:24:54,304 services 10232 11564 Payuee request started | method=GET | url=https://escrow.payuee.com/v1/product/239 | request_path=/v1/product/239 | retries=3
+INFO 2026-08-18 15:24:54,304 services 10232 11564 Payuee HTTP attempt 1/3 | method=GET | url=https://escrow.payuee.com/v1/product/239
+INFO 2026-08-18 15:24:55,436 services 10232 11564 Payuee HTTP response | attempt=1/3 | method=GET | url=https://escrow.payuee.com/v1/product/239 | status=200 | elapsed=1.132s
+INFO 2026-08-18 15:24:55,436 services 10232 11564 Payuee request successful | status=200
+INFO 2026-08-18 15:25:03,850 services 10232 11564 Payuee get_reviews called | product_id=239 | page=1
+INFO 2026-08-18 15:25:03,850 services 10232 11564 Payuee request started | method=GET | url=https://escrow.payuee.com/v1/product/reviews/1/239 | request_path=/v1/product/reviews/1/239 | retries=3
+INFO 2026-08-18 15:25:03,850 services 10232 11564 Payuee HTTP attempt 1/3 | method=GET | url=https://escrow.payuee.com/v1/product/reviews/1/239
+INFO 2026-08-18 15:25:04,991 services 10232 11564 Payuee HTTP response | attempt=1/3 | method=GET | url=https://escrow.payuee.com/v1/product/reviews/1/239 | status=200 | elapsed=1.147s
+INFO 2026-08-18 15:25:04,991 services 10232 11564 Payuee request successful | status=200
+INFO 2026-08-18 15:25:22,753 services 10232 11564 Payuee get_product_detail called | product_id=239
+INFO 2026-08-18 15:25:22,753 services 10232 11564 Payuee request started | method=GET | url=https://escrow.payuee.com/v1/product/239 | request_path=/v1/product/239 | retries=3
+INFO 2026-08-18 15:25:22,753 services 10232 11564 Payuee HTTP attempt 1/3 | method=GET | url=https://escrow.payuee.com/v1/product/239
+INFO 2026-08-18 15:25:23,620 services 10232 11564 Payuee HTTP response | attempt=1/3 | method=GET | url=https://escrow.payuee.com/v1/product/239 | status=200 | elapsed=0.870s
+INFO 2026-08-18 15:25:23,620 services 10232 11564 Payuee request successful | status=200
+INFO 2026-08-18 15:30:24,560 services 10232 7912 Payuee get_products called | filters={"category": "all", "page_number": 1, "sort_option": 1, "limit": 8}
+INFO 2026-08-18 15:30:24,560 services 10232 7912 Payuee request started | method=POST | url=https://escrow.payuee.com/v1/products | request_path=/v1/products | retries=3
+INFO 2026-08-18 15:30:24,560 services 10232 7912 Payuee HTTP attempt 1/3 | method=POST | url=https://escrow.payuee.com/v1/products
+INFO 2026-08-18 15:30:25,891 services 10232 7912 Payuee HTTP response | attempt=1/3 | method=POST | url=https://escrow.payuee.com/v1/products | status=200 | elapsed=1.328s
+INFO 2026-08-18 15:30:25,891 services 10232 7912 Payuee request successful | status=200
+INFO 2026-08-18 15:30:41,320 services 10232 12772 Payuee search_products called | filters={"search_term": "craz", "limit": 24, "page_number": 1, "sort_option": 2}
+INFO 2026-08-18 15:30:41,321 services 10232 12772 Payuee request started | method=POST | url=https://escrow.payuee.com/v1/products/search | request_path=/v1/products/search | retries=3
+INFO 2026-08-18 15:30:41,321 services 10232 12772 Payuee HTTP attempt 1/3 | method=POST | url=https://escrow.payuee.com/v1/products/search
+INFO 2026-08-18 15:30:43,486 services 10232 12772 Payuee HTTP response | attempt=1/3 | method=POST | url=https://escrow.payuee.com/v1/products/search | status=200 | elapsed=2.172s
+INFO 2026-08-18 15:30:43,486 services 10232 12772 Payuee request successful | status=200
+INFO 2026-08-18 15:31:17,683 services 10232 12772 Payuee get_product_detail called | product_id=239
+INFO 2026-08-18 15:31:17,685 services 10232 12772 Payuee request started | method=GET | url=https://escrow.payuee.com/v1/product/239 | request_path=/v1/product/239 | retries=3
+INFO 2026-08-18 15:31:17,685 services 10232 12772 Payuee HTTP attempt 1/3 | method=GET | url=https://escrow.payuee.com/v1/product/239
+INFO 2026-08-18 15:31:19,285 services 10232 12772 Payuee HTTP response | attempt=1/3 | method=GET | url=https://escrow.payuee.com/v1/product/239 | status=200 | elapsed=1.609s
+INFO 2026-08-18 15:31:19,285 services 10232 12772 Payuee request successful | status=200
+INFO 2026-08-18 15:31:27,683 services 10232 12772 Payuee get_reviews called | product_id=239 | page=1
+INFO 2026-08-18 15:31:27,683 services 10232 12772 Payuee request started | method=GET | url=https://escrow.payuee.com/v1/product/reviews/1/239 | request_path=/v1/product/reviews/1/239 | retries=3
+INFO 2026-08-18 15:31:27,683 services 10232 12772 Payuee HTTP attempt 1/3 | method=GET | url=https://escrow.payuee.com/v1/product/reviews/1/239
+INFO 2026-08-18 15:31:28,635 services 10232 12772 Payuee HTTP response | attempt=1/3 | method=GET | url=https://escrow.payuee.com/v1/product/reviews/1/239 | status=200 | elapsed=0.954s
+INFO 2026-08-18 15:31:28,635 services 10232 12772 Payuee request successful | status=200
+INFO 2026-08-18 15:31:35,177 services 10232 12772 Payuee get_product_detail called | product_id=239
+INFO 2026-08-18 15:31:35,177 services 10232 12772 Payuee request started | method=GET | url=https://escrow.payuee.com/v1/product/239 | request_path=/v1/product/239 | retries=3
+INFO 2026-08-18 15:31:35,177 services 10232 12772 Payuee HTTP attempt 1/3 | method=GET | url=https://escrow.payuee.com/v1/product/239
+INFO 2026-08-18 15:31:35,962 services 10232 12772 Payuee HTTP response | attempt=1/3 | method=GET | url=https://escrow.payuee.com/v1/product/239 | status=200 | elapsed=0.790s
+INFO 2026-08-18 15:31:35,962 services 10232 12772 Payuee request successful | status=200
+INFO 2026-08-18 15:46:24,913 services 10232 2816 Payuee get_wallet_balance called
+INFO 2026-08-18 15:46:24,913 services 10232 2816 Payuee request started | method=GET | url=https://escrow.payuee.com/v1/wallet/balance | request_path=/v1/wallet/balance | retries=3
+INFO 2026-08-18 15:46:24,925 services 10232 2816 Payuee HTTP attempt 1/3 | method=GET | url=https://escrow.payuee.com/v1/wallet/balance
+INFO 2026-08-18 15:46:25,924 services 10232 2816 Payuee HTTP response | attempt=1/3 | method=GET | url=https://escrow.payuee.com/v1/wallet/balance | status=200 | elapsed=1.010s
+INFO 2026-08-18 15:46:25,936 services 10232 2816 Payuee request successful | status=200
+INFO 2026-08-18 15:46:32,607 services 10232 2816 Payuee get_wallet_funding_details called
+INFO 2026-08-18 15:46:32,607 services 10232 2816 Payuee request started | method=GET | url=https://escrow.payuee.com/v1/wallet/fund | request_path=/v1/wallet/fund | retries=3
+INFO 2026-08-18 15:46:32,613 services 10232 2816 Payuee HTTP attempt 1/3 | method=GET | url=https://escrow.payuee.com/v1/wallet/fund
+INFO 2026-08-18 15:46:33,749 services 10232 2816 Payuee HTTP response | attempt=1/3 | method=GET | url=https://escrow.payuee.com/v1/wallet/fund | status=200 | elapsed=1.139s
+INFO 2026-08-18 15:46:33,749 services 10232 2816 Payuee request successful | status=200
+INFO 2026-08-18 15:48:14,500 services 10232 2816 Payuee list_orders called | page=1 | limit=15
+INFO 2026-08-18 15:48:14,501 services 10232 2816 Payuee request started | method=GET | url=https://escrow.payuee.com/v1/order/list | request_path=/v1/order/list | retries=3
+INFO 2026-08-18 15:48:14,501 services 10232 2816 Payuee HTTP attempt 1/3 | method=GET | url=https://escrow.payuee.com/v1/order/list
+INFO 2026-08-18 15:48:18,502 services 10232 2816 Payuee HTTP response | attempt=1/3 | method=GET | url=https://escrow.payuee.com/v1/order/list | status=400 | elapsed=4.001s
+ERROR 2026-08-18 15:48:18,502 services 10232 2816 Payuee 400 Bad Request | url=https://escrow.payuee.com/v1/order/list | response={"error":"invalid order ID"}
+ERROR 2026-08-18 15:48:18,503 services 10232 2816 Payuee HTTP error | status=400 | method=GET | url=https://escrow.payuee.com/v1/order/list | error=400 Client Error: Bad Request for url: https://escrow.payuee.com/v1/order/list?page=1&limit=15
+Traceback (most recent call last):
+  File "C:\Users\Eze Christian\Documents\gadgethub\backend\payuee\services.py", line 395, in _request
+    response.raise_for_status()
+  File "C:\Users\Eze Christian\Documents\gadgethub\backend\venv\lib\site-packages\requests\models.py", line 1024, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://escrow.payuee.com/v1/order/list?page=1&limit=15
+INFO 2026-08-18 15:48:54,882 services 10232 2816 Payuee get_products called | filters={"category": "all", "page_number": 1, "sort_option": 1, "limit": 8}
+INFO 2026-08-18 15:48:54,882 services 10232 2816 Payuee request started | method=POST | url=https://escrow.payuee.com/v1/products | request_path=/v1/products | retries=3
+INFO 2026-08-18 15:48:54,883 services 10232 2816 Payuee HTTP attempt 1/3 | method=POST | url=https://escrow.payuee.com/v1/products
+INFO 2026-08-18 15:48:56,899 services 10232 2816 Payuee HTTP response | attempt=1/3 | method=POST | url=https://escrow.payuee.com/v1/products | status=200 | elapsed=2.017s
+INFO 2026-08-18 15:48:56,900 services 10232 2816 Payuee request successful | status=200
+INFO 2026-08-18 15:50:08,153 services 10232 2816 Payuee get_products called | filters={"category": "all", "page_number": 1, "sort_option": 2, "limit": 6}
+INFO 2026-08-18 15:50:08,153 services 10232 2816 Payuee request started | method=POST | url=https://escrow.payuee.com/v1/products | request_path=/v1/products | retries=3
+INFO 2026-08-18 15:50:08,153 services 10232 2816 Payuee HTTP attempt 1/3 | method=POST | url=https://escrow.payuee.com/v1/products
+INFO 2026-08-18 15:50:12,577 services 10232 2816 Payuee HTTP response | attempt=1/3 | method=POST | url=https://escrow.payuee.com/v1/products | status=200 | elapsed=4.425s
+INFO 2026-08-18 15:50:12,579 services 10232 2816 Payuee request successful | status=200
+INFO 2026-08-18 15:51:14,711 services 10232 11092 Payuee get_products called | filters={"category": "tools", "min_price": 0, "max_price": 100000000, "page_number": 1, "sort_option": 5}
+INFO 2026-08-18 15:51:14,711 services 10232 11092 Payuee request started | method=POST | url=https://escrow.payuee.com/v1/products | request_path=/v1/products | retries=3
+INFO 2026-08-18 15:51:14,711 services 10232 11092 Payuee HTTP attempt 1/3 | method=POST | url=https://escrow.payuee.com/v1/products
+INFO 2026-08-18 15:51:16,309 services 10232 11092 Payuee HTTP response | attempt=1/3 | method=POST | url=https://escrow.payuee.com/v1/products | status=404 | elapsed=1.604s
+ERROR 2026-08-18 15:51:16,309 services 10232 11092 Payuee 404 Not Found | url=https://escrow.payuee.com/v1/products | response={"error":{"code":"NOT_FOUND","message":"No products found"}}
+ERROR 2026-08-18 15:51:16,309 services 10232 11092 Payuee HTTP error | status=404 | method=POST | url=https://escrow.payuee.com/v1/products | error=404 Client Error: Not Found for url: https://escrow.payuee.com/v1/products
+Traceback (most recent call last):
+  File "C:\Users\Eze Christian\Documents\gadgethub\backend\payuee\services.py", line 441, in _request
+    response.raise_for_status()
+  File "C:\Users\Eze Christian\Documents\gadgethub\backend\venv\lib\site-packages\requests\models.py", line 1024, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 404 Client Error: Not Found for url: https://escrow.payuee.com/v1/products
+INFO 2026-08-18 15:51:43,840 services 10232 11092 Payuee get_products called | filters={"category": "kids-accessories", "min_price": 0, "max_price": 100000000, "page_number": 1, "sort_option": 5}
+INFO 2026-08-18 15:51:43,840 services 10232 11092 Payuee request started | method=POST | url=https://escrow.payuee.com/v1/products | request_path=/v1/products | retries=3
+INFO 2026-08-18 15:51:43,840 services 10232 11092 Payuee HTTP attempt 1/3 | method=POST | url=https://escrow.payuee.com/v1/products
+INFO 2026-08-18 15:51:44,625 services 10232 11092 Payuee HTTP response | attempt=1/3 | method=POST | url=https://escrow.payuee.com/v1/products | status=404 | elapsed=0.792s
+ERROR 2026-08-18 15:51:44,625 services 10232 11092 Payuee 404 Not Found | url=https://escrow.payuee.com/v1/products | response={"error":{"code":"NOT_FOUND","message":"No products found"}}
+ERROR 2026-08-18 15:51:44,625 services 10232 11092 Payuee HTTP error | status=404 | method=POST | url=https://escrow.payuee.com/v1/products | error=404 Client Error: Not Found for url: https://escrow.payuee.com/v1/products
+Traceback (most recent call last):
+  File "C:\Users\Eze Christian\Documents\gadgethub\backend\payuee\services.py", line 441, in _request
+    response.raise_for_status()
+  File "C:\Users\Eze Christian\Documents\gadgethub\backend\venv\lib\site-packages\requests\models.py", line 1024, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 404 Client Error: Not Found for url: https://escrow.payuee.com/v1/products
+INFO 2026-08-18 15:52:07,218 services 10232 11092 Payuee get_products called | filters={"category": "gadgets", "min_price": 0, "max_price": 100000000, "page_number": 1, "sort_option": 5}
+INFO 2026-08-18 15:52:07,219 services 10232 11092 Payuee request started | method=POST | url=https://escrow.payuee.com/v1/products | request_path=/v1/products | retries=3
+INFO 2026-08-18 15:52:07,219 services 10232 11092 Payuee HTTP attempt 1/3 | method=POST | url=https://escrow.payuee.com/v1/products
+INFO 2026-08-18 15:52:08,107 services 10232 11092 Payuee HTTP response | attempt=1/3 | method=POST | url=https://escrow.payuee.com/v1/products | status=200 | elapsed=0.890s
+INFO 2026-08-18 15:52:08,107 services 10232 11092 Payuee request successful | status=200
+INFO 2026-08-18 16:49:33,738 services 10232 4028 Payuee get_products called | filters={"category": "gadgets", "min_price": 0, "max_price": 100000000, "page_number": 1, "sort_option": 5}
+INFO 2026-08-18 16:49:33,740 services 10232 4028 Payuee request started | method=POST | url=https://escrow.payuee.com/v1/products | request_path=/v1/products | retries=3
+INFO 2026-08-18 16:49:33,742 services 10232 4028 Payuee HTTP attempt 1/3 | method=POST | url=https://escrow.payuee.com/v1/products
+INFO 2026-08-18 16:49:35,369 services 10232 4028 Payuee HTTP response | attempt=1/3 | method=POST | url=https://escrow.payuee.com/v1/products | status=200 | elapsed=1.627s
+INFO 2026-08-18 16:49:35,372 services 10232 4028 Payuee request successful | status=200
+INFO 2026-08-18 16:51:46,233 services 10232 4028 Payuee get_products called | filters={"category": "all", "page_number": 1, "sort_option": 1, "limit": 8}
+INFO 2026-08-18 16:51:46,233 services 10232 4028 Payuee request started | method=POST | url=https://escrow.payuee.com/v1/products | request_path=/v1/products | retries=3
+INFO 2026-08-18 16:51:46,233 services 10232 4028 Payuee HTTP attempt 1/3 | method=POST | url=https://escrow.payuee.com/v1/products
+INFO 2026-08-18 16:51:47,818 services 10232 4028 Payuee HTTP response | attempt=1/3 | method=POST | url=https://escrow.payuee.com/v1/products | status=200 | elapsed=1.582s
+INFO 2026-08-18 16:51:47,820 services 10232 4028 Payuee request successful | status=200
+INFO 2026-08-18 17:05:52,822 services 10232 14984 Payuee get_products called | filters={"category": "all", "page_number": 1, "sort_option": 2, "limit": 6}
+INFO 2026-08-18 17:05:52,823 services 10232 14984 Payuee request started | method=POST | url=https://escrow.payuee.com/v1/products | request_path=/v1/products | retries=3
+INFO 2026-08-18 17:05:52,823 services 10232 14984 Payuee HTTP attempt 1/3 | method=POST | url=https://escrow.payuee.com/v1/products
+INFO 2026-08-18 17:05:55,055 services 10232 14984 Payuee HTTP response | attempt=1/3 | method=POST | url=https://escrow.payuee.com/v1/products | status=200 | elapsed=2.243s
+INFO 2026-08-18 17:05:55,071 services 10232 14984 Payuee request successful | status=200
+INFO 2026-08-18 17:10:59,262 services 10232 14984 Payuee get_products called | filters={"category": "all", "min_price": 0, "max_price": 100000000, "page_number": 1, "sort_option": 5}
+INFO 2026-08-18 17:10:59,262 services 10232 14984 Payuee request started | method=POST | url=https://escrow.payuee.com/v1/products | request_path=/v1/products | retries=3
+INFO 2026-08-18 17:10:59,262 services 10232 14984 Payuee HTTP attempt 1/3 | method=POST | url=https://escrow.payuee.com/v1/products
+INFO 2026-08-18 17:11:00,367 services 10232 14984 Payuee HTTP response | attempt=1/3 | method=POST | url=https://escrow.payuee.com/v1/products | status=200 | elapsed=1.102s
+INFO 2026-08-18 17:11:00,367 services 10232 14984 Payuee request successful | status=200
+INFO 2026-08-18 17:12:09,472 services 10232 14984 Payuee get_products called | filters={"category": "all", "min_price": 0, "max_price": 100000000, "page_number": 1, "sort_option": 5}
+INFO 2026-08-18 17:12:09,472 services 10232 14984 Payuee request started | method=POST | url=https://escrow.payuee.com/v1/products | request_path=/v1/products | retries=3
+INFO 2026-08-18 17:12:09,472 services 10232 14984 Payuee HTTP attempt 1/3 | method=POST | url=https://escrow.payuee.com/v1/products
+INFO 2026-08-18 17:12:10,888 services 10232 14984 Payuee HTTP response | attempt=1/3 | method=POST | url=https://escrow.payuee.com/v1/products | status=200 | elapsed=1.416s
+INFO 2026-08-18 17:12:10,888 services 10232 14984 Payuee request successful | status=200
+INFO 2026-08-18 17:17:43,642 services 10232 14984 Payuee get_products called | filters={"category": "all", "min_price": 0, "max_price": 100000000, "page_number": 1, "sort_option": 5}
+INFO 2026-08-18 17:17:43,651 services 10232 14984 Payuee request started | method=POST | url=https://escrow.payuee.com/v1/products | request_path=/v1/products | retries=3
+INFO 2026-08-18 17:17:43,651 services 10232 14984 Payuee HTTP attempt 1/3 | method=POST | url=https://escrow.payuee.com/v1/products
+INFO 2026-08-18 17:17:46,146 services 10232 14984 Payuee HTTP response | attempt=1/3 | method=POST | url=https://escrow.payuee.com/v1/products | status=200 | elapsed=2.497s
+INFO 2026-08-18 17:17:46,146 services 10232 14984 Payuee request successful | status=200
+INFO 2026-08-18 17:29:07,980 services 10232 7060 Payuee get_products called | filters={"category": "all", "page_number": 1, "sort_option": 1, "limit": 8}
+INFO 2026-08-18 17:29:07,980 services 10232 7060 Payuee request started | method=POST | url=https://escrow.payuee.com/v1/products | request_path=/v1/products | retries=3
+INFO 2026-08-18 17:29:07,980 services 10232 7060 Payuee HTTP attempt 1/3 | method=POST | url=https://escrow.payuee.com/v1/products
+INFO 2026-08-18 17:29:10,033 services 10232 7060 Payuee HTTP response | attempt=1/3 | method=POST | url=https://escrow.payuee.com/v1/products | status=200 | elapsed=2.051s
+INFO 2026-08-18 17:29:10,033 services 10232 7060 Payuee request successful | status=200
+INFO 2026-08-18 17:29:55,624 services 10232 7060 Payuee get_products called | filters={"category": "all", "page_number": 1, "sort_option": 2, "limit": 6}
+INFO 2026-08-18 17:29:55,624 services 10232 7060 Payuee request started | method=POST | url=https://escrow.payuee.com/v1/products | request_path=/v1/products | retries=3
+INFO 2026-08-18 17:29:55,627 services 10232 7060 Payuee HTTP attempt 1/3 | method=POST | url=https://escrow.payuee.com/v1/products
+INFO 2026-08-18 17:29:56,455 services 10232 7060 Payuee HTTP response | attempt=1/3 | method=POST | url=https://escrow.payuee.com/v1/products | status=200 | elapsed=0.828s
+INFO 2026-08-18 17:29:56,455 services 10232 7060 Payuee request successful | status=200
+INFO 2026-08-18 17:30:18,612 services 10232 15012 Payuee get_products called | filters={"category": "outfits", "min_price": 0, "max_price": 100000000, "page_number": 1, "sort_option": 5}
+INFO 2026-08-18 17:30:18,612 services 10232 15012 Payuee request started | method=POST | url=https://escrow.payuee.com/v1/products | request_path=/v1/products | retries=3
+INFO 2026-08-18 17:30:18,612 services 10232 15012 Payuee HTTP attempt 1/3 | method=POST | url=https://escrow.payuee.com/v1/products
+INFO 2026-08-18 17:30:20,614 services 10232 15012 Payuee HTTP response | attempt=1/3 | method=POST | url=https://escrow.payuee.com/v1/products | status=200 | elapsed=2.007s
+INFO 2026-08-18 17:30:20,614 services 10232 15012 Payuee request successful | status=200

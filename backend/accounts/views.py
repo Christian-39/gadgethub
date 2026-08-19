@@ -115,6 +115,13 @@ class ProfilePictureUploadView(APIView):
 
 class AddressBookView(generics.ListCreateAPIView):
     serializer_class = AddressBookSerializer
+    # Same issue as WishlistView: this inherited the project-wide
+    # paginated list response ({"count", "results", ...}) even
+    # though checkout.js/profile.js both expect a plain array of
+    # addresses. That mismatch is why checkout said "No saved
+    # addresses" even when the user had some - `addresses.length`
+    # on a pagination dict is undefined, which is falsy.
+    pagination_class = None
 
     def get_queryset(self):
         return AddressBook.objects.filter(user=self.request.user)

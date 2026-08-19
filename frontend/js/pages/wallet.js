@@ -1,4 +1,4 @@
-import { API, formatNaira } from '../core/api.js';
+import { API, formatNaira, debounce } from '../core/api.js';
 import { UI } from '../core/ui.js';
 
 class WalletPage {

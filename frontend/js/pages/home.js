@@ -1,5 +1,6 @@
 import { API, formatNaira, lazyLoadImages } from '../core/api.js';
 import { UI } from '../core/ui.js';
+import { App } from '../core/app.js';
 
 class HomePage {
     static async init() {

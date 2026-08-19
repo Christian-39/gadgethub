@@ -1,6 +1,7 @@
 import { API, formatNaira, lazyLoadImages } from '../core/api.js';
 import { UI } from '../core/ui.js';
 import { Auth } from '../core/auth.js';
+import { App } from '../core/app.js';
 
 class ProductDetailPage {
     static product = null;

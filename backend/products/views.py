@@ -1,3 +1,5 @@
+import hashlib
+import json
 from django.shortcuts import get_object_or_404
 from rest_framework import generics, status, permissions
 from rest_framework.views import APIView
@@ -5,9 +7,28 @@ from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 from django.core.cache import cache
 from .models import ProductCache, WishlistItem, CartItem
+from .serializers import WishlistItemSerializer
 from payuee.services import PayueeService
 
 payuee = PayueeService()
+
+
+def _stable_cache_key(prefix, payload):
+    """
+    Deterministic cache key for a request payload.
+
+    The previous implementation used `hash(str(request.data))`. Python
+    randomizes str/dict hash() per-process by default (PYTHONHASHSEED),
+    so the exact same request produced a DIFFERENT cache key on every
+    worker process (and even across restarts of the same worker) -
+    meaning the cache almost never actually hit, and every product
+    list/search request round-tripped to Payuee. This is the main
+    reason products loaded slowly. A content hash is stable everywhere.
+    """
+    normalized = json.dumps(payload, sort_keys=True, default=str)
+    digest = hashlib.md5(normalized.encode('utf-8')).hexdigest()
+    return f"{prefix}:{digest}"
+
 
 class StandardResultsSetPagination(PageNumberPagination):
     page_size = 24
@@ -44,7 +65,7 @@ class ProductListView(APIView):
     permission_classes = [permissions.AllowAny]
 
     def post(self, request):
-        cache_key = f"products:{hash(str(request.data))}"
+        cache_key = _stable_cache_key('products', request.data)
         cached = cache.get(cache_key)
         if cached:
             return Response(cached)
@@ -84,8 +105,14 @@ class ProductSearchView(APIView):
     permission_classes = [permissions.AllowAny]
 
     def post(self, request):
+        cache_key = _stable_cache_key('product_search', request.data)
+        cached = cache.get(cache_key)
+        if cached:
+            return Response(cached)
+
         try:
             data = payuee.search_products(request.data)
+            cache.set(cache_key, data, 120)
             return Response(data)
         except Exception as e:
             return Response({'error': str(e)}, status=500)
@@ -132,6 +159,15 @@ class ProductDetailView(APIView):
             return Response({'error': str(e)}, status=500)
 
 class WishlistView(generics.ListCreateAPIView):
+    serializer_class = WishlistItemSerializer
+    # This is a small, per-user list with no pagination UI on the
+    # frontend - it was silently inheriting the project-wide
+    # DEFAULT_PAGINATION_CLASS, which wraps list responses as
+    # {"count", "next", "previous", "results"}. The wishlist page
+    # expects a plain array, so every load was failing/rendering
+    # empty ("Failed to load wishlist").
+    pagination_class = None
+
     def get_queryset(self):
         return WishlistItem.objects.filter(user=self.request.user).select_related('product')
 

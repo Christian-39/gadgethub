@@ -1,5 +1,6 @@
 import { API, formatNaira } from '../core/api.js';
 import { UI } from '../core/ui.js';
+import { App } from '../core/app.js';
 
 class CartPage {
     static async init() {

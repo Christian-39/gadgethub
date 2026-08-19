@@ -6,15 +6,35 @@ import { UI } from './ui.js';
 class App {
     static async init() {
         Theme.init();
-        await this.updateNav();
-        this.bindGlobalEvents();
 
-        // Always run - guests need their counts hidden, not skipped.
+        // Render the topbar/sidebar immediately from the last known
+        // user (cached in localStorage by a previous Auth.check()),
+        // instead of waiting on a fresh network round-trip first.
+        // Previously the UI always started from the "logged out"
+        // markup and only swapped to the real state once
+        // /auth/profile/ resolved - on every navigation/refresh that
+        // showed a brief, incorrect "logged out" flash before
+        // snapping back to "logged in". Rendering the cached state
+        // first (usually correct) and reconciling with the server
+        // afterward removes that flicker.
+        this.renderNav(Auth.getUser());
+        this.bindGlobalEvents();
+        this.updateCounts();
+
+        const user = await Auth.check();
+        this.renderNav(user);
         this.updateCounts();
     }
 
     static async updateNav() {
+        // Kept for compatibility with any external caller - just
+        // re-confirms with the server and re-renders.
         const user = await Auth.check();
+        this.renderNav(user);
+        return user;
+    }
+
+    static renderNav(user) {
         const authLinks = document.getElementById('auth-links');
         const mobileAuth = document.getElementById('mobile-auth');
         const sidebarUser = document.getElementById('sidebar-user');
