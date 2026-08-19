@@ -3,20 +3,45 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.db import transaction
+import logging
 from .models import Order, OrderItem, OrderTimeline
 from products.models import CartItem, ProductCache
 from payuee.services import PayueeService
 from accounts.models import AddressBook
 
 payuee = PayueeService()
+logger = logging.getLogger(__name__)
+
+# A single-vendor shipping fee has no legitimate reason to exceed this
+# in kobo (₦500,000). Nothing in the checkout flow was validating the
+# `fee` Payuee returns before displaying it and folding it into the
+# order total, so one anomalous value for a single vendor/product
+# would flow straight through to the customer's screen unchecked -
+# this is what let a value like ₦10,000,000,000,000,002 reach the UI.
+MAX_PLAUSIBLE_SHIPPING_FEE_KOBO = 50_000_000
 
 class ShippingFeesView(APIView):
     def post(self, request):
         try:
             data = payuee.calculate_shipping_fees(request.data)
-            return Response(data)
         except Exception as e:
             return Response({'error': str(e)}, status=500)
+
+        suspect = [
+            s for s in data.get('shipping', [])
+            if not isinstance(s.get('fee'), (int, float)) or s.get('fee', 0) > MAX_PLAUSIBLE_SHIPPING_FEE_KOBO
+        ]
+        if suspect:
+            logger.error(
+                "Implausible shipping fee from Payuee | request=%s | suspect_entries=%s | full_response=%s",
+                request.data, suspect, data,
+            )
+            return Response(
+                {'error': 'Shipping is temporarily unavailable for one or more items in your cart. Please try again shortly or contact support.'},
+                status=502,
+            )
+
+        return Response(data)
 
 class CreateOrderView(APIView):
     @transaction.atomic

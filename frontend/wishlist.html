@@ -93,7 +93,10 @@
                     
                     container.innerHTML = items.map(item => {
                         const p = item.product;
-                        const img = p.images?.[0]?.url ? `https://payuee.com/image/${p.images[0].url}` : '/assets/placeholder.jpg';
+                        // p.images comes from ProductCache (via the wishlist
+                        // serializer), which now consistently stores plain
+                        // URL strings - not {url: "..."} objects.
+                        const img = p.images?.[0] ? `https://payuee.com/image/${p.images[0]}` : '/assets/placeholder.jpg';
                         return `
                             <div class="product-card" data-id="${p.payuee_id}">
                                 <div class="product-image">

@@ -16,6 +16,17 @@ class CheckoutPage {
         await this.loadAddresses();
         await this.loadCart();
         this.bindEvents();
+
+        // loadAddresses() auto-selects a default/first address but
+        // never quoted shipping for it - only clicking a different
+        // address card did. If the shopper only has one address (or
+        // the default one is already correct), they'd never click
+        // anything, shippingFees would stay empty, and "Place Order"
+        // would always fail with "Calculate shipping first". Quote it
+        // now that both the address and the cart are loaded.
+        if (this.selectedAddress) {
+            await this.calculateShipping();
+        }
     }
 
     static async loadAddresses() {
@@ -132,7 +143,7 @@ class CheckoutPage {
                 </div>
             `).join('');
         } catch (e) {
-            UI.showToast('Failed to calculate shipping', 'error');
+            UI.showToast(e.message || 'Failed to calculate shipping', 'error');
         }
     }
 

@@ -87,7 +87,24 @@ class ProductListView(APIView):
                         'vendor_id': prod['eshop_user_id'],
                         'vendor_type': prod.get('vendor_type', 'basic'),
                         'product_url_id': prod['product_url_id'],
-                        'images': prod.get('product_image', []),
+                        # Same flattening ProductDetailView already does
+                        # below (plain URL strings) - this was
+                        # previously left as the raw Payuee
+                        # product_image list of {"url": ...} objects,
+                        # while ProductDetailView flattened it. Since
+                        # most cart-adds come from browsing the
+                        # product grid (which syncs via this view),
+                        # ProductCache.images ended up holding an
+                        # object in most rows. CartView.get() expects
+                        # a plain string (`images[0]`), so it was
+                        # serializing that object straight into the
+                        # cart response - the frontend then built
+                        # `.../image/[object Object]` as the <img>
+                        # src, which is why cart images didn't load.
+                        'images': [
+                            img['url'] for img in prod.get('product_image', [])
+                            if img.get('url')
+                        ],
                         'sizes': prod.get('clothing_sizes', '') or prod.get('shoe_sizes', ''),
                         'weight': prod.get('net_weight', 0),
                         'estimated_delivery': prod.get('estimated_delivery', 7),
