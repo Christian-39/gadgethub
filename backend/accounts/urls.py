@@ -10,6 +10,8 @@ urlpatterns = [
     path('profile/picture/', views.ProfilePictureUploadView.as_view()),
     path('addresses/', views.AddressBookView.as_view()),
     path('addresses/<uuid:id>/', views.AddressBookDetailView.as_view()),
+    path('states/', views.StatesView.as_view()),
+    path('cities/', views.CitiesView.as_view()),
     path('change-password/', views.ChangePasswordView.as_view()),
     path('forgot-password/', views.ForgotPasswordView.as_view()),
     path('reset-password/', views.ResetPasswordView.as_view()),

@@ -129,7 +129,7 @@
                 <!-- JS populated -->
             </div>
             <div class="add-address-form">
-                <h4>Add New Address</h4>
+                <h4 id="address-form-title">Add New Address</h4>
                 <form id="address-form" class="form-grid">
                     <div class="form-group">
                         <label>Label</label>
@@ -156,20 +156,27 @@
                         <input type="text" id="addr-line2">
                     </div>
                     <div class="form-group">
-                        <label>City</label>
-                        <input type="text" id="addr-city">
+                        <label>State</label>
+                        <select id="addr-state">
+                            <option value="">Loading states...</option>
+                        </select>
                     </div>
                     <div class="form-group">
-                        <label>State</label>
-                        <input type="text" id="addr-state">
+                        <label>City</label>
+                        <select id="addr-city" disabled>
+                            <option value="">Select a state first</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label class="checkbox">
                             <input type="checkbox" id="addr-default"> Set as default
                         </label>
                     </div>
+                    <input type="hidden" id="addr-lat">
+                    <input type="hidden" id="addr-lng">
                 </form>
                 <button id="add-address" class="btn-primary">Add Address</button>
+                <button id="cancel-edit-address" class="btn-outline" hidden>Cancel</button>
             </div>
         </div>
 
@@ -213,7 +220,7 @@
         <a href="/">🏠<span>Home</span></a>
         <a href="/categories.html">📂<span>Categories</span></a>
         <a href="/cart.html">🛒<span>Cart</span><span class="badge" data-cart-count>0</span></a>
-        <a href="/wishlist.html">❤️<span>Wishlist</span><span class="badge" data-wish-count>0</span></a>
+        <a href="/search.html">🔍<span>Search</span></a>
         <a href="/profile.html" class="active">👤<span>Profile</span></a>
     </nav
 

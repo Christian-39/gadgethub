@@ -152,13 +152,17 @@ body {
     height: var(--header-height);
     background: var(--surface);
     border-bottom: 1px solid var(--border);
-    /* Three-column grid, not flexbox: the two outer columns share
-       "1fr" equally no matter how wide their own content is, which
-       keeps the center column (the search bar) mathematically
-       centered in the header at all times - it never shifts based on
-       the page title's length or whether the user is logged in. */
+    /* minmax(0, 1fr) - not bare 1fr - on both outer columns. Bare 1fr
+       columns have an implicit min-width of "auto" (their content's
+       min-content size), so on a narrow phone the left column (menu
+       button + page name) could grow past its fair share and steal
+       space from the right column, which is what let the profile/
+       auth controls drift off the right edge depending on the page
+       title's length. minmax(0, ...) removes that floor so both
+       outer columns are always genuinely equal, and .mobile-logo's
+       own ellipsis handles the squeeze instead of pushing outward. */
     display: grid;
-    grid-template-columns: 1fr auto 1fr;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
     align-items: center;
     padding: 0 24px;
     column-gap: 16px;
@@ -264,7 +268,6 @@ body {
     margin-top: var(--header-height);
     padding: 24px;
     min-height: calc(100vh - var(--header-height));
-    padding-bottom: calc(var(--mobile-nav-height) + 24px);
 }
 
 .overlay {
@@ -298,11 +301,18 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     text-decoration: none;
     color: var(--text-secondary);
     font-size: 0.7rem;
     gap: 4px;
     position: relative;
+    /* Full-height, equal-width tap targets instead of just the
+       intrinsic icon+label size - a much bigger tappable area without
+       changing the bar's overall height. */
+    flex: 1;
+    height: 100%;
+    padding: 6px 4px;
 }
 
 .mobile-nav a.active {
@@ -455,6 +465,13 @@ body {
     font-size: 0.9rem;
 }
 
+.cat-count {
+    display: block;
+    margin-top: 4px;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
 /* Products Grid */
 .products-grid {
     display: grid;
@@ -506,7 +523,15 @@ body {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.3s;
+    transition: transform 0.3s, opacity 0.3s;
+}
+
+.product-image img.lazy-img {
+    opacity: 0;
+}
+
+.product-image img:not([data-src]) {
+    opacity: 1;
 }
 
 .product-card:hover .product-image img {
@@ -750,6 +775,40 @@ body {
 }
 
 /* Cart */
+@media (max-width: 640px) {
+    /* Cart items were a fixed-width flex row (image + info +
+       qty/total/remove all side by side) with no mobile override,
+       so on a phone their combined min-content width exceeded the
+       viewport and forced horizontal scrolling, with the quantity
+       controls, price, and remove button competing for the same
+       cramped space. Wrapping into two rows - product on top,
+       quantity/total/remove below - fits any phone width without
+       cutting anything off. */
+    .cart-item {
+        flex-wrap: wrap;
+    }
+    .cart-item img {
+        width: 72px;
+        height: 72px;
+    }
+    .cart-item-info {
+        flex: 1 1 calc(100% - 92px);
+        min-width: 0;
+    }
+    .cart-item-info h3 {
+        overflow-wrap: break-word;
+    }
+    .cart-item-actions {
+        flex-basis: 100%;
+        justify-content: space-between;
+        margin-top: 4px;
+        gap: 12px;
+    }
+    .cart-item-total {
+        min-width: auto;
+    }
+}
+
 .cart-layout {
     display: grid;
     grid-template-columns: 1fr 360px;
@@ -889,9 +948,15 @@ body {
     background: rgba(79, 70, 229, 0.05);
 }
 
+.address-info {
+    flex: 1;
+    min-width: 0;
+}
+
 .address-info p {
     color: var(--text-secondary);
     font-size: 0.9rem;
+    overflow-wrap: break-word;
 }
 
 .pin-input {
@@ -902,6 +967,25 @@ body {
     text-align: center;
     border: 2px solid var(--border);
     border-radius: 8px;
+    transition: border-color 0.2s;
+}
+
+.pin-input.pin-valid {
+    border-color: var(--secondary);
+}
+
+.pin-input.pin-invalid {
+    border-color: var(--danger);
+}
+
+.pin-feedback {
+    margin-top: 8px;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.pin-feedback-error {
+    color: var(--danger);
 }
 
 .checkout-summary {
@@ -932,10 +1016,17 @@ body {
     height: 60px;
     object-fit: cover;
     border-radius: 6px;
+    flex-shrink: 0;
+}
+
+.checkout-item > div {
+    flex: 1;
+    min-width: 0;
 }
 
 .checkout-item h4 {
     font-size: 0.9rem;
+    overflow-wrap: break-word;
 }
 
 .shipping-breakdown {
@@ -971,6 +1062,8 @@ body {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 12px;
+    flex-wrap: wrap;
+    gap: 8px;
 }
 
 .order-id {
@@ -1403,11 +1496,21 @@ body {
     margin-bottom: 32px;
 }
 
-.address-card {
+/* Was ".address-card" - same class name as the (structurally
+   different, flex-row) card in checkout.js. Since that block's
+   `display: flex` was never overridden here, this card's 6+ stacked
+   children (header, several <p> tags, actions) were being forced into
+   a horizontal row instead of stacking - which is what overflowed the
+   viewport and caused horizontal scrolling on mobile. Renamed instead
+   of trying to override every property back, so the two components
+   can never collide again. */
+.address-manage-card {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
     padding: 20px;
+    min-width: 0;
+    overflow-wrap: break-word;
 }
 
 .address-header {
@@ -1415,6 +1518,8 @@ body {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 8px;
+    flex-wrap: wrap;
+    gap: 8px;
 }
 
 .badge-default {
@@ -1427,6 +1532,7 @@ body {
 
 .address-actions {
     display: flex;
+    flex-wrap: wrap;
     gap: 12px;
     margin-top: 12px;
 }
@@ -1832,6 +1938,11 @@ body {
     .main-content {
         margin-left: 0;
         padding: 16px;
+        /* The shorthand above resets all four sides - re-apply the
+           reserved space for the fixed mobile bottom nav or the last
+           card/button on every page renders underneath it and can't
+           be scrolled to. */
+        padding-bottom: calc(var(--mobile-nav-height) + 24px);
     }
     .mobile-nav {
         display: flex;
@@ -1840,13 +1951,33 @@ body {
         display: none;
     }
     .profile-stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
         width: 100%;
-        justify-content: space-around;
+        gap: 12px;
+    }
+    .stat-card {
+        min-width: 0;
+        padding: 16px 12px;
     }
     .profile-header {
         flex-direction: column;
         align-items: center;
         text-align: center;
+    }
+    .profile-avatar-section {
+        flex-direction: column;
+        width: 100%;
+        align-items: center;
+    }
+    /* .profile-header centers everything above (avatar included) for
+       a typical mobile profile layout, but the name/email/phone text
+       itself should stay left-aligned rather than centered - give
+       .profile-info its own full-width, left-aligned block instead of
+       inheriting the centering. */
+    .profile-info {
+        text-align: left;
+        width: 100%;
     }
     .form-grid {
         grid-template-columns: 1fr;
@@ -1889,6 +2020,12 @@ body {
     }
     .auth-logo {
         font-size: 1.3rem;
+    }
+    /* Keep the right-hand topbar controls compact and guaranteed to
+       fit at narrow widths - the avatar + Logout button stay, the
+       name text (which has no fixed length) drops out. */
+    .nav-user span {
+        display: none;
     }
 }
 

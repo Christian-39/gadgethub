@@ -45,6 +45,7 @@ class HomePage {
                 <a href="/products.html?category=${c.id}" class="category-card">
                     <span class="cat-icon">${c.icon}</span>
                     <span class="cat-name">${c.name}</span>
+                    ${c.count !== null && c.count !== undefined ? `<span class="cat-count">${c.count} products</span>` : ''}
                 </a>
             `).join('');
         } catch (e) {

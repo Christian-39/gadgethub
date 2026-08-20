@@ -58,7 +58,28 @@ class ProductCategoriesView(APIView):
     ]
 
     def get(self, request):
-        return Response({'success': self.CATEGORIES})
+        cache_key = 'products:categories_with_counts'
+        cached = cache.get(cache_key)
+        if cached is not None:
+            return Response({'success': cached})
+
+        result = []
+        for cat in self.CATEGORIES:
+            count_key = f'products:category_count:{cat["id"]}'
+            count = cache.get(count_key)
+            if count is None:
+                try:
+                    data = payuee.get_products({'category': cat['id'], 'page_number': 1})
+                    count = data.get('pagination', {}).get('AllRecords', 0)
+                except Exception:
+                    count = None
+                # Long TTL - counts don't need to be real-time, and this
+                # avoids 7 live Payuee calls on every cache miss.
+                cache.set(count_key, count, 1800)
+            result.append({**cat, 'count': count})
+
+        cache.set(cache_key, result, 1800)
+        return Response({'success': result})
 
 
 class ProductListView(APIView):

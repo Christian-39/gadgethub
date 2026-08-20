@@ -6,6 +6,11 @@ class CheckoutPage {
     static cartItems = [];
     static shippingFees = [];
     static selectedAddress = null;
+    // Tracks whether the PIN currently in the input has been confirmed
+    // correct by the server, and which value that confirmation was
+    // for - so editing the PIN after a successful check invalidates
+    // it again instead of trusting a stale result.
+    static pinState = { verifiedValue: null, valid: false };
 
     static async init() {
         if (!Auth.isAuthenticated()) {
@@ -148,10 +153,28 @@ class CheckoutPage {
     }
 
     static bindEvents() {
+        this.bindPinValidation();
+
         document.getElementById('place-order')?.addEventListener('click', async () => {
-            const transCode = document.getElementById('trans-code').value;
+            const pinInput = document.getElementById('trans-code');
+            const transCode = pinInput.value;
             if (!transCode || transCode.length !== 6) {
                 UI.showToast('Enter a valid 6-digit transaction PIN', 'error');
+                return;
+            }
+
+            // The PIN was already checked live as the user typed it
+            // (see bindPinValidation) - if that check already came
+            // back invalid for this exact value, don't bother hitting
+            // /orders/create/ at all, just point back at the field.
+            // This is a UX shortcut only: /orders/create/ performs its
+            // own authoritative check server-side regardless, so an
+            // unverified PIN (e.g. the live check is still in flight,
+            // or failed silently) still gets a real answer from the
+            // backend rather than being trusted blindly.
+            if (this.pinState.verifiedValue === transCode && !this.pinState.valid) {
+                UI.showToast('Transaction PIN is incorrect. Please enter the correct PIN.', 'error');
+                pinInput.focus();
                 return;
             }
             
@@ -186,10 +209,93 @@ class CheckoutPage {
                 
                 window.location.href = `/orders.html?id=${result.order_id}`;
             } catch (err) {
+                // Covers the case where the live check above never ran
+                // (e.g. it was still in flight) - the authoritative
+                // backend rejection surfaces here either way, with the
+                // same message a stale local check would have shown.
+                if (err.message && err.message.toLowerCase().includes('pin')) {
+                    this.setPinState(transCode, false);
+                }
                 UI.showToast(err.message, 'error');
             }
         });
     }
+
+    // Verifies the PIN as soon as all 6 digits are entered, instead of
+    // waiting for "Place Order". Re-verifies only when the value
+    // actually changes (not on every keystroke before that), and a
+    // network failure while checking is treated as "unknown", not as
+    // "wrong" - Place Order still gets a real answer from the server
+    // either way.
+    static bindPinValidation() {
+        const input = document.getElementById('trans-code');
+        if (!input) return;
+
+        input.addEventListener('input', () => {
+            const value = input.value;
+            input.classList.remove('pin-valid', 'pin-invalid');
+            this.clearPinFeedback();
+
+            if (value.length !== 6) {
+                this.pinState = { verifiedValue: null, valid: false };
+                return;
+            }
+            if (this.pinState.verifiedValue === value) {
+                // Already have a result for this exact value.
+                input.classList.add(this.pinState.valid ? 'pin-valid' : 'pin-invalid');
+                return;
+            }
+            this.verifyPin(value);
+        });
+    }
+
+    static async verifyPin(value) {
+        const input = document.getElementById('trans-code');
+        try {
+            const result = await API.post('/auth/verify-pin/', { pin: value });
+            // If the user kept typing/editing while this was in
+            // flight, the input no longer holds the value we checked -
+            // don't apply a now-stale result.
+            if (input.value !== value) return;
+            this.setPinState(value, !!result.valid);
+        } catch (err) {
+            // Network/API failure - distinct from an incorrect PIN.
+            // Leave verifiedValue unset so Place Order's own backend
+            // check is authoritative instead of a false "invalid".
+            if (input.value !== value) return;
+            this.pinState = { verifiedValue: null, valid: false };
+            this.showPinFeedback('Could not verify PIN right now - it will still be checked when you place the order.', false);
+        }
+    }
+
+    static setPinState(value, valid) {
+        this.pinState = { verifiedValue: value, valid };
+        const input = document.getElementById('trans-code');
+        input.classList.remove('pin-valid', 'pin-invalid');
+        input.classList.add(valid ? 'pin-valid' : 'pin-invalid');
+        if (!valid) {
+            this.showPinFeedback('Transaction PIN is incorrect. Please enter the correct PIN.', true);
+        } else {
+            this.clearPinFeedback();
+        }
+    }
+
+    static showPinFeedback(message, isError) {
+        let el = document.getElementById('pin-feedback');
+        const input = document.getElementById('trans-code');
+        if (!el) {
+            el = document.createElement('p');
+            el.id = 'pin-feedback';
+            input.insertAdjacentElement('afterend', el);
+        }
+        el.className = isError ? 'pin-feedback pin-feedback-error' : 'pin-feedback';
+        el.textContent = message;
+    }
+
+    static clearPinFeedback() {
+        document.getElementById('pin-feedback')?.remove();
+    }
 }
+
 
 export { CheckoutPage };

@@ -1,4 +1,6 @@
 from django.shortcuts import get_object_or_404
+from django.conf import settings
+from django.contrib.auth.hashers import check_password
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -56,6 +58,15 @@ class CreateOrderView(APIView):
 
         if not request.user.pin_created:
             return Response({'error': 'Transaction PIN required'}, status=400)
+
+        # The frontend verifies the PIN as soon as it's fully typed (via
+        # /auth/verify-pin/) for immediate feedback, but that's a UX
+        # convenience only - nothing previously re-checked it here, so
+        # whatever was submitted went straight through to Payuee as
+        # trans_code with no local authority over it at all. This is
+        # the actual, authoritative check.
+        if not trans_code or not check_password(trans_code, request.user.transaction_pin):
+            return Response({'error': 'Incorrect transaction PIN'}, status=400)
 
         address = get_object_or_404(AddressBook, id=address_id, user=request.user)
 

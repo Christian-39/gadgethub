@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import check_password, make_password
 from django.core.mail import send_mail
 from django.conf import settings
+from django.core.cache import cache
 from rest_framework import generics, status, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -13,8 +14,10 @@ from .serializers import (
     RegisterSerializer, UserSerializer, AddressBookSerializer,
     ChangePasswordSerializer, TransactionPINSerializer
 )
+from payuee.services import PayueeService
 
 User = get_user_model()
+payuee = PayueeService()
 
 def set_jwt_cookies(response, user):
     refresh = RefreshToken.for_user(user)
@@ -137,6 +140,48 @@ class AddressBookDetailView(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return AddressBook.objects.filter(user=self.request.user)
+
+class StatesView(APIView):
+    """States supported by Payuee for delivery, used to populate the
+    address form's State select instead of a hardcoded/incomplete
+    list. Cached for a day - this list changes essentially never."""
+    def get(self, request):
+        cache_key = 'accounts:payuee_states'
+        cached = cache.get(cache_key)
+        if cached is not None:
+            return Response({'states': cached})
+
+        try:
+            data = payuee.get_states()
+            states = data.get('states', [])
+        except Exception as e:
+            return Response({'error': str(e)}, status=502)
+
+        cache.set(cache_key, states, 86400)
+        return Response({'states': states})
+
+class CitiesView(APIView):
+    """Cities/wards within a given state, used to populate the address
+    form's City select once a State is chosen. Cached per state for a
+    day for the same reason as StatesView."""
+    def get(self, request):
+        state = request.query_params.get('state')
+        if not state:
+            return Response({'error': 'state is required'}, status=400)
+
+        cache_key = f'accounts:payuee_cities:{state.lower()}'
+        cached = cache.get(cache_key)
+        if cached is not None:
+            return Response({'cities': cached})
+
+        try:
+            data = payuee.get_cities(state)
+            cities = data.get('lga', [])
+        except Exception as e:
+            return Response({'error': str(e)}, status=502)
+
+        cache.set(cache_key, cities, 86400)
+        return Response({'cities': cities})
 
 class ChangePasswordView(APIView):
     def post(self, request):

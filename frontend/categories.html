@@ -65,7 +65,7 @@
         <a href="/">🏠<span>Home</span></a>
         <a href="/categories.html" class="active">📂<span>Categories</span></a>
         <a href="/cart.html">🛒<span>Cart</span><span class="badge" data-cart-count>0</span></a>
-        <a href="/wishlist.html">❤️<span>Wishlist</span><span class="badge" data-wish-count>0</span></a>
+        <a href="/search.html">🔍<span>Search</span></a>
         <a href="/profile.html">👤<span>Profile</span></a>
     </nav>
 
@@ -82,6 +82,7 @@
                     <a href="/products.html?category=${c.id}" class="category-card" style="padding: 40px;">
                         <span class="cat-icon" style="font-size: 3rem;">${c.icon}</span>
                         <span class="cat-name" style="font-size: 1.2rem;">${c.name}</span>
+                        ${c.count !== null && c.count !== undefined ? `<span class="cat-count">${c.count} products</span>` : ''}
                     </a>
                 `).join('');
             } catch (e) {
