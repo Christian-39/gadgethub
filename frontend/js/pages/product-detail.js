@@ -43,11 +43,13 @@ class ProductDetailPage {
             
             container.innerHTML = `
                 <div class="product-gallery">
-                    <img id="main-image" src="${mainImage}" alt="${this.product.title}">
+                    <img id="main-image" src="${mainImage}" alt="${this.product.title}" onerror="this.onerror=null;this.src='/assets/placeholder.jpg';">
                     <div class="thumbnail-list">
                         ${images.map(img => `
                             <img src="https://payuee.com/image/${img.url}" 
                                  class="thumb" 
+                                 loading="lazy"
+                                 onerror="this.onerror=null;this.src='/assets/placeholder.jpg';"
                                  onclick="document.getElementById('main-image').src=this.src">
                         `).join('')}
                     </div>

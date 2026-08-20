@@ -107,17 +107,38 @@ class App {
         }
     }
 
+    static closeSidebar() {
+        document.getElementById('sidebar')?.classList.remove('open');
+        document.getElementById('overlay')?.classList.remove('show');
+    }
+
     static bindGlobalEvents() {
         // Mobile menu
         document.getElementById('menu-toggle')?.addEventListener('click', () => {
             document.getElementById('sidebar').classList.toggle('open');
             document.getElementById('overlay').classList.toggle('show');
         });
-        
-        document.getElementById('overlay')?.addEventListener('click', () => {
-            document.getElementById('sidebar').classList.remove('open');
-            document.getElementById('overlay').classList.remove('show');
-        });
+
+        // The X button rendered inside the sidebar header had no
+        // handler at all - clicking it did nothing.
+        document.getElementById('close-sidebar')?.addEventListener('click', () => this.closeSidebar());
+
+        // Backdrop click.
+        document.getElementById('overlay')?.addEventListener('click', () => this.closeSidebar());
+
+        // Clicks inside the panel itself are on a sibling element to
+        // the overlay (not a descendant of it), so they don't
+        // currently reach the overlay's own listener - stopping
+        // propagation here as well is a defensive belt-and-suspenders
+        // measure in case that structure ever changes.
+        document.getElementById('sidebar')?.addEventListener('click', (e) => e.stopPropagation());
+
+        // Close on scrolling the page behind the open menu.
+        window.addEventListener('scroll', () => {
+            if (document.getElementById('sidebar')?.classList.contains('open')) {
+                this.closeSidebar();
+            }
+        }, { passive: true });
 
         // Topbar search (left side of header) - navigates to the
         // dedicated search page, same as pressing enter/clicking the

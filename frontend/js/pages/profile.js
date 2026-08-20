@@ -144,7 +144,13 @@ class ProfilePage {
     // pick a specific entry afterward (edit mode) don't have to
     // re-fetch it.
     static async loadCitiesForState(state, { preserveValue = null } = {}) {
-        const citySelect = document.getElementById('addr-city');
+        let citySelect = document.getElementById('addr-city');
+        // If a previous state's city fetch failed and left the manual
+        // text-input fallback in place, restore the real select before
+        // trying again for this (possibly different) state.
+        this.restoreCitySelect(citySelect);
+        citySelect = document.getElementById('addr-city');
+
         if (!state) {
             citySelect.innerHTML = '<option value="">Select a state first</option>';
             citySelect.disabled = true;
@@ -161,8 +167,10 @@ class ProfilePage {
                 cities = data.cities || [];
                 this.citiesCache[state] = cities;
             } catch (e) {
-                citySelect.innerHTML = '<option value="">Failed to load cities</option>';
-                citySelect.disabled = true;
+                // Don't just leave the field broken - let the user
+                // type the city manually so they can still finish
+                // adding the address while the location API is down.
+                this.replaceCityWithTextInput();
                 return [];
             }
         }
@@ -185,8 +193,33 @@ class ProfilePage {
         return cities;
     }
 
+    // Swaps the (broken) City <select> for a plain text input so the
+    // user can still finish the form manually when the location API
+    // is unavailable, instead of being stuck with a disabled field.
+    static replaceCityWithTextInput() {
+        const citySelect = document.getElementById('addr-city');
+        if (!citySelect || citySelect.tagName === 'INPUT') return;
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.id = 'addr-city';
+        input.placeholder = 'Enter your city';
+        citySelect.replaceWith(input);
+    }
+
+    // Swaps the manual text-input fallback back for the normal
+    // <select> once we're about to reload it with real options again
+    // (a state was reselected, or the form is being reset).
+    static restoreCitySelect(currentEl) {
+        if (!currentEl || currentEl.tagName === 'SELECT') return;
+        const select = document.createElement('select');
+        select.id = 'addr-city';
+        select.disabled = true;
+        currentEl.replaceWith(select);
+    }
+
     static updateAddrLatLng() {
         const citySelect = document.getElementById('addr-city');
+        if (citySelect.tagName !== 'SELECT') return;
         const opt = citySelect.options[citySelect.selectedIndex];
         document.getElementById('addr-lat').value = opt?.dataset.lat || '';
         document.getElementById('addr-lng').value = opt?.dataset.lng || '';
@@ -231,8 +264,10 @@ class ProfilePage {
         document.getElementById('address-form').reset();
         document.getElementById('addr-lat').value = '';
         document.getElementById('addr-lng').value = '';
-        document.getElementById('addr-city').innerHTML = '<option value="">Select a state first</option>';
-        document.getElementById('addr-city').disabled = true;
+        this.restoreCitySelect(document.getElementById('addr-city'));
+        const citySelect = document.getElementById('addr-city');
+        citySelect.innerHTML = '<option value="">Select a state first</option>';
+        citySelect.disabled = true;
     }
 
 

@@ -42,11 +42,16 @@ class UI {
             : '/assets/placeholder.jpg';
         
         const price = (product.selling_price / 100).toFixed(2);
+        // Handles the case where imageUrl looked valid but the actual
+        // request 404s/fails (broken Payuee image link) - falls back
+        // to the placeholder instead of showing a broken image icon.
+        // onerror=null first so a failing placeholder can't loop.
+        const onerror = `this.onerror=null;this.src='/assets/placeholder.jpg';this.classList.remove('lazy-img');`;
         
         if (view === 'list') {
             return `
             <div class="product-card list-view" data-id="${product.ID}">
-                <img data-src="${imageUrl}" alt="${product.title}" class="lazy-img">
+                <img data-src="${imageUrl}" alt="${product.title}" class="lazy-img" loading="lazy" onerror="${onerror}">
                 <div class="product-info">
                     <h3>${product.title}</h3>
                     <p class="product-desc">${product.description?.substring(0, 100)}...</p>
@@ -65,7 +70,7 @@ class UI {
         return `
         <div class="product-card" data-id="${product.ID}">
             <div class="product-image">
-                <img data-src="${imageUrl}" alt="${product.title}" class="lazy-img">
+                <img data-src="${imageUrl}" alt="${product.title}" class="lazy-img" loading="lazy" onerror="${onerror}">
                 ${product.on_sale ? '<span class="badge-sale">SALE</span>' : ''}
                 ${product.featured ? '<span class="badge-featured">★</span>' : ''}
                                 <button class="btn-wishlist" data-id="${product.ID}">♡</button>

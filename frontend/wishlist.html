@@ -22,7 +22,7 @@
     <div id="overlay" class="overlay"></div>
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <a href="/" class="logo">⚡ GadgetHub</a>
+            <a href="/" class="logo"><svg class="logo-svg" width="140" height="26" viewBox="0 0 150 26" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="GadgetHub"><circle cx="8" cy="13" r="5" fill="#7c3aed"/><text x="20" y="19" font-family="Inter, -apple-system, BlinkMacSystemFont, sans-serif" font-size="18" font-weight="800" fill="currentColor">GadgetHub</text></svg></a>
             <button class="close-sidebar" id="close-sidebar">✕</button>
         </div>
         <div class="sidebar-user" id="sidebar-user"></div>
@@ -100,7 +100,7 @@
                         return `
                             <div class="product-card" data-id="${p.payuee_id}">
                                 <div class="product-image">
-                                    <img data-src="${img}" alt="${p.title}" class="lazy-img">
+                                    <img data-src="${img}" alt="${p.title}" class="lazy-img" loading="lazy" onerror="this.onerror=null;this.src='/assets/placeholder.jpg';this.classList.remove('lazy-img');">
                                     <button class="btn-wishlist active" data-id="${p.payuee_id}">❤</button>
                                 </div>
                                 <div class="product-info">

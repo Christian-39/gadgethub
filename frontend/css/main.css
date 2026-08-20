@@ -1,16 +1,21 @@
 :root {
-    --primary: #4F46E5;
-    --primary-dark: #4338CA;
+    /* Re-skinned to match the reference design (payuee-escrow.onrender.com):
+       purple primary instead of indigo, flatter white background
+       instead of off-white + card contrast, layered shadow tokens. */
+    --primary: #7c3aed;
+    --primary-dark: #6d28d9;
     --secondary: #10B981;
-    --danger: #EF4444;
+    --danger: #ef4444;
     --warning: #F59E0B;
-    --bg: #F9FAFB;
-    --surface: #FFFFFF;
+    --bg: #ffffff;
+    --surface: #ffffff;
     --text: #111827;
-    --text-secondary: #6B7280;
-    --border: #E5E7EB;
-    --shadow: 0 1px 3px rgba(0,0,0,0.1);
+    --text-secondary: #6b7280;
+    --border: #e5e7eb;
+    --shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
     --radius: 12px;
+    --radius-sm: 8px;
     --sidebar-width: 260px;
     --header-height: 64px;
     --mobile-nav-height: 64px;
@@ -53,11 +58,26 @@ body {
     justify-content: space-between;
 }
 
-.logo, .mobile-logo {
+.mobile-logo {
     font-size: 1.5rem;
     font-weight: 800;
     color: var(--primary);
     text-decoration: none;
+}
+
+/* Wordmark logo (SVG: purple accent dot + "GadgetHub" text using
+   currentColor) - dark slate on light mode, white on dark mode via
+   the theme's own --text token, rather than the page-name slot's
+   purple. */
+.logo {
+    display: inline-flex;
+    align-items: center;
+    color: var(--text);
+    text-decoration: none;
+}
+
+.logo-svg {
+    display: block;
 }
 
 .close-sidebar {
@@ -290,6 +310,10 @@ body {
     left: 0;
     right: 0;
     height: var(--mobile-nav-height);
+    /* Extra safe-area padding on top of the bar's own height, so the
+       tap area itself never shrinks on notch/gesture-bar devices -
+       it just sits a little higher. */
+    padding-bottom: env(safe-area-inset-bottom, 0px);
     background: var(--surface);
     border-top: 1px solid var(--border);
     z-index: 100;
@@ -304,19 +328,28 @@ body {
     justify-content: center;
     text-decoration: none;
     color: var(--text-secondary);
-    font-size: 0.7rem;
+    /* Governs the emoji "icon" size (~24px) - the label's own font
+       size is reset separately below. */
+    font-size: 1.5rem;
     gap: 4px;
     position: relative;
     /* Full-height, equal-width tap targets instead of just the
-       intrinsic icon+label size - a much bigger tappable area without
-       changing the bar's overall height. */
+       intrinsic icon+label size - well over the 44x44px minimum
+       touch target on any phone width. */
     flex: 1;
     height: 100%;
+    min-height: 44px;
     padding: 6px 4px;
+    border-radius: var(--radius-sm);
+}
+
+.mobile-nav a span {
+    font-size: 12px;
 }
 
 .mobile-nav a.active {
     color: var(--primary);
+    background: rgba(124, 58, 237, 0.08);
 }
 
 .mobile-nav .badge {
@@ -356,6 +389,7 @@ body {
 
 .btn-primary:hover {
     background: var(--primary-dark);
+    transform: translateY(-1px);
 }
 
 .btn-outline {
@@ -389,7 +423,7 @@ body {
 
 /* Hero */
 .hero {
-    background: linear-gradient(135deg, var(--primary) 0%, #7C3AED 100%);
+    background: linear-gradient(135deg, var(--primary) 0%, #a78bfa 100%);
     border-radius: var(--radius);
     padding: 60px 40px;
     color: white;
@@ -441,6 +475,7 @@ body {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
+    box-shadow: var(--shadow);
     padding: 24px;
     text-align: center;
     text-decoration: none;
@@ -450,8 +485,8 @@ body {
 
 .category-card:hover {
     border-color: var(--primary);
-    transform: translateY(-2px);
-    box-shadow: var(--shadow);
+    transform: scale(1.02);
+    box-shadow: var(--shadow-lg);
 }
 
 .cat-icon {
@@ -489,15 +524,17 @@ body {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
+    box-shadow: var(--shadow);
     overflow: hidden;
     cursor: pointer;
     transition: all 0.2s;
     position: relative;
+    text-align: center;
 }
 
 .product-card:hover {
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+    transform: scale(1.02);
 }
 
 .product-card.list-view {
@@ -528,6 +565,12 @@ body {
 
 .product-image img.lazy-img {
     opacity: 0;
+    /* Simple pulse placeholder for the gap between the card
+       rendering and the lazy-loaded image actually arriving, reusing
+       the same shimmer used by the loading-state skeletons. */
+    background: linear-gradient(90deg, var(--bg) 25%, var(--border) 50%, var(--bg) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
 }
 
 .product-image img:not([data-src]) {
@@ -613,6 +656,7 @@ body {
 .product-rating {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 6px;
     margin-top: 8px;
     font-size: 0.85rem;
@@ -1623,11 +1667,12 @@ body {
 }
 
 .auth-logo {
-    display: block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
     text-align: center;
-    font-size: 1.5rem;
-    font-weight: 800;
-    color: var(--primary);
+    color: var(--text);
     text-decoration: none;
     margin-bottom: 24px;
 }
@@ -1942,7 +1987,7 @@ body {
            reserved space for the fixed mobile bottom nav or the last
            card/button on every page renders underneath it and can't
            be scrolled to. */
-        padding-bottom: calc(var(--mobile-nav-height) + 24px);
+        padding-bottom: calc(var(--mobile-nav-height) + env(safe-area-inset-bottom, 0px) + 24px);
     }
     .mobile-nav {
         display: flex;
@@ -2005,8 +2050,12 @@ body {
 }
 
 @media (max-width: 480px) {
+    /* Was 1fr here, overriding the 2-column rule set at 768px for
+       every phone-width screen - mobile should never drop below 2
+       columns of products. */
     .products-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
     }
     .stat-card {
         min-width: auto;
@@ -2032,4 +2081,5 @@ body {
 /* Utilities */
 .hidden { display: none !important; }
 .error { color: var(--danger); padding: 20px; text-align: center; }
+.empty-state { color: var(--text-secondary); padding: 32px 20px; text-align: center; grid-column: 1 / -1; }
 .note { font-size: 0.85rem; color: var(--text-secondary); }

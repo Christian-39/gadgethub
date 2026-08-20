@@ -148,6 +148,14 @@ class CheckoutPage {
                 </div>
             `).join('');
         } catch (e) {
+            // Friendly fallback instead of leaving "Calculating..."
+            // stuck on screen forever - Place Order still requires a
+            // successful quote before it can proceed (the backend
+            // needs real shipping figures to create the order), this
+            // is just a better resting state for the summary line
+            // while that's unavailable.
+            const shippingEl = document.getElementById('checkout-shipping');
+            if (shippingEl) shippingEl.textContent = 'Shipping calculated at checkout';
             UI.showToast(e.message || 'Failed to calculate shipping', 'error');
         }
     }

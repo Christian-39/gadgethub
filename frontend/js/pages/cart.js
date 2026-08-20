@@ -32,7 +32,7 @@ class CartPage {
                 subtotal += item.total;
                 return `
                     <div class="cart-item" data-id="${item.id}">
-                        <img src="${item.product.image ? 'https://payuee.com/image/' + item.product.image : '/assets/placeholder.jpg'}" alt="${item.product.title}">
+                        <img src="${item.product.image ? 'https://payuee.com/image/' + item.product.image : '/assets/placeholder.jpg'}" alt="${item.product.title}" loading="lazy" onerror="this.onerror=null;this.src='/assets/placeholder.jpg';">
                         <div class="cart-item-info">
                             <h3>${item.product.title}</h3>
                             <p class="cart-item-meta">${item.size ? `Size: ${item.size}` : ''}</p>

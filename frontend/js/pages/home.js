@@ -66,11 +66,16 @@ class HomePage {
             });
             
             const products = data.success || [];
+            if (!products.length) {
+                container.innerHTML = '<p class="empty-state">No best sellers yet - check back soon!</p>';
+                return;
+            }
             container.innerHTML = products.map(p => UI.renderProductCard(p)).join('');
             lazyLoadImages();
             this.bindProductEvents(container);
         } catch (e) {
             console.error('Best sellers load failed', e);
+            container.innerHTML = '<p class="empty-state">No best sellers yet - check back soon!</p>';
         }
     }
 
