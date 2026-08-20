@@ -43,7 +43,6 @@ const NavInjector = {
             { href: '/orders.html', label: 'Orders', icon: NAV_ICONS.orders },
             { href: '/wallet.html', label: 'Wallet', icon: NAV_ICONS.wallet },
             { href: '/profile.html', label: 'Profile', icon: NAV_ICONS.profile },
-            { href: '/notifications.html', label: 'Notifications', icon: NAV_ICONS.bell, badge: 'notif-count' },
             { href: '/customer-care.html', label: 'Support', icon: NAV_ICONS.support },
         ];
         el.innerHTML = items.map(it => {
