@@ -363,9 +363,18 @@ body {
     display: none;
     background: none;
     border: none;
-    font-size: 1.5rem;
     cursor: pointer;
     flex-shrink: 0;
+    color: var(--text);
+    padding: 4px;
+}
+
+@media (max-width: 768px) {
+    .menu-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 }
 
 /* Fixed-width, ellipsis-truncated slot for the current page's name -
@@ -2143,9 +2152,6 @@ body {
     }
     .main-header .mobile-logo {
         min-width: 0;
-    }
-    .menu-toggle {
-        display: block;
     }
     .main-content {
         margin-left: 0;
