@@ -172,21 +172,99 @@ body {
 }
 
 .theme-toggle {
-    /* Now lives in .header-actions (topbar) instead of the old
-       sidebar footer - sized as a compact icon button to match
-       the other header controls. */
+    position: relative;
     width: 40px;
     height: 40px;
-    padding: 0;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid var(--border);
+    padding: 0;
+    border: 0;
     border-radius: 50%;
-    background: var(--bg);
+    background: transparent;
+    color: var(--text-color);
     cursor: pointer;
-    font-size: 1.1rem;
-    flex-shrink: 0;
+    overflow: hidden;
+    transition:
+        background-color 0.25s ease,
+        color 0.25s ease;
+}
+
+.theme-toggle:hover {
+    background: var(--hover-bg);
+}
+
+.theme-icon {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    transition:
+        transform 0.55s cubic-bezier(0.4, 0, 0.2, 1),
+        opacity 0.25s ease;
+}
+
+/* Light mode → show sun */
+.theme-icon-sun {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
+}
+
+.theme-icon-moon {
+    opacity: 0;
+    transform: rotate(-180deg) scale(0.4);
+}
+
+/* Dark mode → show moon */
+[data-theme="dark"] .theme-icon-sun {
+    opacity: 0;
+    transform: rotate(180deg) scale(0.4);
+}
+
+[data-theme="dark"] .theme-icon-moon {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
+}
+
+/* Spin when clicked */
+.theme-toggle.is-spinning .theme-icon {
+    animation: theme-icon-spin 0.6s ease-in-out;
+}
+
+@keyframes theme-icon-spin {
+    from {
+        transform: rotate(0deg) scale(0.7);
+    }
+
+    to {
+        transform: rotate(360deg) scale(1);
+    }
+}
+
+/* Dark mode spin starts from the opposite direction */
+[data-theme="dark"] .theme-toggle.is-spinning .theme-icon-moon {
+    animation: moon-spin 0.6s ease-in-out;
+}
+
+@keyframes moon-spin {
+    from {
+        transform: rotate(-180deg) scale(0.4);
+    }
+
+    to {
+        transform: rotate(180deg) scale(1);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .theme-icon {
+        transition:
+            opacity 0.2s ease,
+            transform 0.2s ease;
+    }
+
+    .theme-toggle.is-spinning .theme-icon {
+        animation: none;
+    }
 }
 
 .main-header {
