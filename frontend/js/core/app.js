@@ -162,6 +162,52 @@ class App {
                 }
             });
         }
+        const bottomSearchTrigger = document.getElementById('bottom-search-trigger');
+        const mobileSearchBar     = document.getElementById('mobile-search-bar');
+        const mobileSearchInput   = document.getElementById('mobile-search-input');
+        const mobileSearchBtn     = document.getElementById('mobile-search-btn');
+
+        // Inject backdrop once if it doesn't exist
+        let backdrop = document.querySelector('.mobile-search-backdrop');
+        if (!backdrop) {
+            backdrop = document.createElement('div');
+            backdrop.className = 'mobile-search-backdrop';
+            document.body.appendChild(backdrop);
+        }
+
+        const openMobileSearch = () => {
+            mobileSearchBar?.classList.add('active');
+            backdrop?.classList.add('active');
+            mobileSearchInput?.focus();
+        };
+
+        const closeMobileSearch = () => {
+            mobileSearchBar?.classList.remove('active');
+            backdrop?.classList.remove('active');
+        };
+
+        // Bottom-nav search tap
+        bottomSearchTrigger?.addEventListener('click', (e) => {
+            e.preventDefault();
+            openMobileSearch();
+        });
+
+        // Tap backdrop to close
+        backdrop?.addEventListener('click', closeMobileSearch);
+
+        // Execute search
+        const runMobileSearch = () => {
+            const q = mobileSearchInput?.value.trim();
+            if (q) {
+                closeMobileSearch();
+                window.location.href = `/search.html?q=${encodeURIComponent(q)}`;
+            }
+        };
+
+        mobileSearchBtn?.addEventListener('click', runMobileSearch);
+        mobileSearchInput?.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') runMobileSearch();
+        });
         searchBtn?.addEventListener('click', goToSearch);
     }
 }
