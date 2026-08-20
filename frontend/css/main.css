@@ -59,10 +59,20 @@ body {
 }
 
 .mobile-logo {
+    display: inline-flex;
+    align-items: center;
     font-size: 1.5rem;
     font-weight: 800;
     color: var(--primary);
     text-decoration: none;
+}
+
+.main-header .mobile-logo {
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
 }
 
 /* Wordmark logo (SVG: purple accent dot + "GadgetHub" text using
@@ -130,6 +140,21 @@ body {
     display: flex;
     align-items: center;
     gap: 12px;
+}
+
+.sidebar-nav a svg,
+.mobile-nav a svg {
+  flex-shrink: 0;
+}
+
+.sidebar-nav a svg {
+  width: 20px;
+  height: 20px;
+}
+
+.mobile-nav a svg {
+  width: 24px;
+  height: 24px;
 }
 
 .sidebar-nav a:hover, .sidebar-nav a.active {
