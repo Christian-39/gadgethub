@@ -25,26 +25,59 @@ MAX_PLAUSIBLE_SHIPPING_FEE_KOBO = 50_000_000
 class ShippingFeesView(APIView):
     def post(self, request):
         try:
+            logger.info(
+                "ShippingFeesView request | payload=%s",
+                request.data,
+            )
             data = payuee.calculate_shipping_fees(request.data)
+            logger.info(
+                "ShippingFeesView Payuee raw response | %s",
+                data,
+            )
         except Exception as e:
+            logger.exception("Payuee shipping-fees call failed: %s", e)
             return Response({'error': str(e)}, status=500)
 
-        suspect = [
-            s for s in data.get('shipping', [])
-            if not isinstance(s.get('fee'), (int, float)) or s.get('fee', 0) > MAX_PLAUSIBLE_SHIPPING_FEE_KOBO
-        ]
+        # Payuee occasionally returns {"shipping": null} instead of []
+        shipping = data.get('shipping') or []
+
+        suspect = []
+        for entry in shipping:
+            fee = entry.get('fee')
+
+            # Payuee sometimes returns fee as a string — coerce it
+            if isinstance(fee, str):
+                try:
+                    fee = float(fee)
+                    entry['fee'] = fee   # fix in-place so downstream code sees a number
+                except ValueError:
+                    suspect.append(entry)
+                    continue
+
+            if not isinstance(fee, (int, float)):
+                suspect.append(entry)
+                continue
+
+            if fee > MAX_PLAUSIBLE_SHIPPING_FEE_KOBO:
+                suspect.append(entry)
+
         if suspect:
             logger.error(
-                "Implausible shipping fee from Payuee | request=%s | suspect_entries=%s | full_response=%s",
+                "Implausible shipping fee from Payuee | "
+                "request=%s | suspect=%s | full_response=%s",
                 request.data, suspect, data,
             )
             return Response(
-                {'error': 'Shipping is temporarily unavailable for one or more items in your cart. Please try again shortly or contact support.'},
+                {
+                    'error': 'Shipping is temporarily unavailable for one or more items in your cart. Please try again shortly or contact support.',
+                    'debug_suspect': suspect,   # remove in production after debugging
+                },
                 status=502,
             )
 
         return Response(data)
 
+        
 class CreateOrderView(APIView):
     @transaction.atomic
     def post(self, request):
