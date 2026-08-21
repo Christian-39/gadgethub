@@ -164,7 +164,7 @@ class ProfilePage {
         if (!cities) {
             try {
                 const data = await API.get(`/auth/cities/?state=${encodeURIComponent(state)}`);
-                cities = data.lga || [];
+                cities = data.cities || [];
                 this.citiesCache[state] = cities;
             } catch (e) {
                 // Don't just leave the field broken - let the user
