@@ -6,10 +6,7 @@ class CheckoutPage {
     static cartItems = [];
     static shippingFees = [];
     static selectedAddress = null;
-    // Tracks whether the PIN currently in the input has been confirmed
-    // correct by the server, and which value that confirmation was
-    // for - so editing the PIN after a successful check invalidates
-    // it again instead of trusting a stale result.
+    static addresses = [];          // ← cached so calculateShipping can reuse them
     static pinState = { verifiedValue: null, valid: false };
 
     static async init() {
@@ -17,18 +14,12 @@ class CheckoutPage {
             window.location.href = '/login.html?redirect=/checkout.html';
             return;
         }
-        
+
         await this.loadAddresses();
         await this.loadCart();
         this.bindEvents();
 
-        // loadAddresses() auto-selects a default/first address but
-        // never quoted shipping for it - only clicking a different
-        // address card did. If the shopper only has one address (or
-        // the default one is already correct), they'd never click
-        // anything, shippingFees would stay empty, and "Place Order"
-        // would always fail with "Calculate shipping first". Quote it
-        // now that both the address and the cart are loaded.
+        // Auto-quote shipping for the pre-selected address on load
         if (this.selectedAddress) {
             await this.calculateShipping();
         }
@@ -38,12 +29,13 @@ class CheckoutPage {
         const container = document.getElementById('address-list');
         try {
             const addresses = await API.get('/auth/addresses/');
-            
+            this.addresses = addresses;   // ← cache for calculateShipping
+
             if (!addresses.length) {
                 container.innerHTML = '<p>No saved addresses. <a href="/profile.html#addresses">Add one</a></p>';
                 return;
             }
-            
+
             container.innerHTML = addresses.map(a => `
                 <div class="address-card ${a.is_default ? 'selected' : ''}" data-id="${a.id}">
                     <div class="address-radio">
@@ -58,24 +50,27 @@ class CheckoutPage {
                     </div>
                 </div>
             `).join('');
-            
-            // Select first if none default
+
+            // If nothing is marked default, visually select the first card
             if (!addresses.find(a => a.is_default)) {
                 document.querySelector('.address-card')?.classList.add('selected');
                 document.querySelector('input[name="address"]')?.setAttribute('checked', 'true');
             }
-            
+
             container.querySelectorAll('.address-card').forEach(card => {
                 card.addEventListener('click', () => {
                     container.querySelectorAll('.address-card').forEach(c => c.classList.remove('selected'));
                     card.classList.add('selected');
                     card.querySelector('input').checked = true;
-                    this.selectedAddress = card.dataset.id;
+                    // Use String() so integer IDs from the API and string dataset IDs match
+                    this.selectedAddress = String(card.dataset.id);
                     this.calculateShipping();
                 });
             });
-            
-            this.selectedAddress = addresses.find(a => a.is_default)?.id || addresses[0].id;
+
+            // Initial selection: default first, otherwise first address
+            const initial = addresses.find(a => a.is_default) || addresses[0];
+            this.selectedAddress = String(initial.id);
         } catch (e) {
             container.innerHTML = '<p class="error">Failed to load addresses</p>';
         }
@@ -85,12 +80,12 @@ class CheckoutPage {
         const container = document.getElementById('checkout-items');
         try {
             this.cartItems = await API.get('/products/cart/');
-            
+
             if (!this.cartItems.length) {
                 window.location.href = '/cart.html';
                 return;
             }
-            
+
             let subtotal = 0;
             container.innerHTML = this.cartItems.map(item => {
                 subtotal += item.total;
@@ -105,7 +100,7 @@ class CheckoutPage {
                     </div>
                 `;
             }).join('');
-            
+
             document.getElementById('checkout-subtotal').textContent = formatNaira(subtotal);
         } catch (e) {
             container.innerHTML = '<p class="error">Failed to load cart</p>';
@@ -113,16 +108,19 @@ class CheckoutPage {
     }
 
     static async calculateShipping() {
-        const address = await API.get('/auth/addresses/').then(a => a.find(ad => ad.id === this.selectedAddress));
+        // Look up from the cached address list (no redundant API call)
+        const address = this.addresses.find(
+            ad => String(ad.id) === String(this.selectedAddress)
+        );
         if (!address) return;
-        
+
         const vendors = [...new Set(this.cartItems.map(i => i.product.vendor_id))];
         const cartPayload = this.cartItems.map(i => ({
             product_id: i.product.id,
             eshop_user_id: i.product.vendor_id,
             quantity: i.quantity
         }));
-        
+
         try {
             const data = await API.post('/orders/shipping-fees/', {
                 vendors,
@@ -132,14 +130,14 @@ class CheckoutPage {
                 longitude: address.longitude || 3.3792,
                 cart_items: cartPayload
             });
-            
+
             this.shippingFees = data.shipping || [];
             const totalShipping = this.shippingFees.reduce((sum, s) => sum + (s.fee / 100), 0);
             const subtotal = this.cartItems.reduce((sum, i) => sum + i.total, 0);
-            
+
             document.getElementById('checkout-shipping').textContent = formatNaira(totalShipping);
             document.getElementById('checkout-total').textContent = formatNaira(subtotal + totalShipping);
-            
+
             // Show shipping breakdown
             document.getElementById('shipping-breakdown').innerHTML = this.shippingFees.map(s => `
                 <div class="shipping-option">
@@ -148,12 +146,6 @@ class CheckoutPage {
                 </div>
             `).join('');
         } catch (e) {
-            // Friendly fallback instead of leaving "Calculating..."
-            // stuck on screen forever - Place Order still requires a
-            // successful quote before it can proceed (the backend
-            // needs real shipping figures to create the order), this
-            // is just a better resting state for the summary line
-            // while that's unavailable.
             const shippingEl = document.getElementById('checkout-shipping');
             if (shippingEl) shippingEl.textContent = 'Shipping calculated at checkout';
             UI.showToast(e.message || 'Failed to calculate shipping', 'error');
@@ -171,31 +163,22 @@ class CheckoutPage {
                 return;
             }
 
-            // The PIN was already checked live as the user typed it
-            // (see bindPinValidation) - if that check already came
-            // back invalid for this exact value, don't bother hitting
-            // /orders/create/ at all, just point back at the field.
-            // This is a UX shortcut only: /orders/create/ performs its
-            // own authoritative check server-side regardless, so an
-            // unverified PIN (e.g. the live check is still in flight,
-            // or failed silently) still gets a real answer from the
-            // backend rather than being trusted blindly.
             if (this.pinState.verifiedValue === transCode && !this.pinState.valid) {
                 UI.showToast('Transaction PIN is incorrect. Please enter the correct PIN.', 'error');
                 pinInput.focus();
                 return;
             }
-            
+
             if (!this.selectedAddress) {
                 UI.showToast('Select a delivery address', 'error');
                 return;
             }
-            
+
             if (!this.shippingFees.length) {
                 UI.showToast('Calculate shipping first', 'error');
                 return;
             }
-            
+
             try {
                 const result = await API.post('/orders/create/', {
                     address_id: this.selectedAddress,
@@ -208,19 +191,15 @@ class CheckoutPage {
                         company_name: s.company_name
                     }))
                 });
-                
+
                 if (result.status === 'hold') {
                     UI.showToast('Order on hold - please fund your wallet', 'warning');
                 } else {
                     UI.showToast('Order placed successfully!', 'success');
                 }
-                
+
                 window.location.href = `/orders.html?id=${result.order_id}`;
             } catch (err) {
-                // Covers the case where the live check above never ran
-                // (e.g. it was still in flight) - the authoritative
-                // backend rejection surfaces here either way, with the
-                // same message a stale local check would have shown.
                 if (err.message && err.message.toLowerCase().includes('pin')) {
                     this.setPinState(transCode, false);
                 }
@@ -229,12 +208,6 @@ class CheckoutPage {
         });
     }
 
-    // Verifies the PIN as soon as all 6 digits are entered, instead of
-    // waiting for "Place Order". Re-verifies only when the value
-    // actually changes (not on every keystroke before that), and a
-    // network failure while checking is treated as "unknown", not as
-    // "wrong" - Place Order still gets a real answer from the server
-    // either way.
     static bindPinValidation() {
         const input = document.getElementById('trans-code');
         if (!input) return;
@@ -249,7 +222,6 @@ class CheckoutPage {
                 return;
             }
             if (this.pinState.verifiedValue === value) {
-                // Already have a result for this exact value.
                 input.classList.add(this.pinState.valid ? 'pin-valid' : 'pin-invalid');
                 return;
             }
@@ -261,15 +233,9 @@ class CheckoutPage {
         const input = document.getElementById('trans-code');
         try {
             const result = await API.post('/auth/verify-pin/', { pin: value });
-            // If the user kept typing/editing while this was in
-            // flight, the input no longer holds the value we checked -
-            // don't apply a now-stale result.
             if (input.value !== value) return;
             this.setPinState(value, !!result.valid);
         } catch (err) {
-            // Network/API failure - distinct from an incorrect PIN.
-            // Leave verifiedValue unset so Place Order's own backend
-            // check is authoritative instead of a false "invalid".
             if (input.value !== value) return;
             this.pinState = { verifiedValue: null, valid: false };
             this.showPinFeedback('Could not verify PIN right now - it will still be checked when you place the order.', false);
@@ -304,6 +270,5 @@ class CheckoutPage {
         document.getElementById('pin-feedback')?.remove();
     }
 }
-
 
 export { CheckoutPage };
