@@ -25,59 +25,56 @@ MAX_PLAUSIBLE_SHIPPING_FEE_KOBO = 50_000_000
 class ShippingFeesView(APIView):
     def post(self, request):
         try:
-            logger.info(
-                "ShippingFeesView request | payload=%s",
-                request.data,
-            )
             data = payuee.calculate_shipping_fees(request.data)
-            logger.info(
-                "ShippingFeesView Payuee raw response | %s",
-                data,
-            )
         except Exception as e:
             logger.exception("Payuee shipping-fees call failed: %s", e)
             return Response({'error': str(e)}, status=500)
 
-        # Payuee occasionally returns {"shipping": null} instead of []
+        # Payuee sometimes returns {"shipping": null} instead of []
         shipping = data.get('shipping') or []
 
         suspect = []
         for entry in shipping:
             fee = entry.get('fee')
 
-            # Payuee sometimes returns fee as a string — coerce it
+            # Payuee occasionally returns fee as a JSON string — coerce it
             if isinstance(fee, str):
                 try:
                     fee = float(fee)
-                    entry['fee'] = fee   # fix in-place so downstream code sees a number
+                    entry['fee'] = fee
                 except ValueError:
-                    suspect.append(entry)
+                    suspect.append({'reason': 'fee_is_non_numeric_string', 'entry': entry})
                     continue
 
+            if fee is None:
+                suspect.append({'reason': 'fee_is_null', 'entry': entry})
+                continue
+
             if not isinstance(fee, (int, float)):
-                suspect.append(entry)
+                suspect.append({'reason': 'fee_is_unexpected_type', 'type': type(fee).__name__, 'entry': entry})
                 continue
 
             if fee > MAX_PLAUSIBLE_SHIPPING_FEE_KOBO:
-                suspect.append(entry)
+                suspect.append({'reason': 'fee_too_large', 'fee': fee, 'entry': entry})
+                continue
 
         if suspect:
             logger.error(
-                "Implausible shipping fee from Payuee | "
-                "request=%s | suspect=%s | full_response=%s",
+                "Implausible shipping fee from Payuee | request=%s | suspect=%s | full_response=%s",
                 request.data, suspect, data,
             )
             return Response(
                 {
                     'error': 'Shipping is temporarily unavailable for one or more items in your cart. Please try again shortly or contact support.',
-                    'debug_suspect': suspect,   # remove in production after debugging
+                    'debug_payuee_response': data,      # ← look at this in DevTools
+                    'debug_suspect_entries': suspect,   # ← tells you exactly which entry failed
                 },
                 status=502,
             )
 
         return Response(data)
 
-        
+
 class CreateOrderView(APIView):
     @transaction.atomic
     def post(self, request):
